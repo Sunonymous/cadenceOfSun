@@ -1,0 +1,22 @@
+{:deps   {:aliases [:dev :test]}
+
+ :nrepl  {:port 7002}
+ :builds {:app {:target           :browser
+                :asset-path       "js"
+                :output-dir       "resources/public/js"
+                :dev              {:build-hooks [(teknql.tailwind/start-watch!)]}
+                :release          {:build-hooks [(teknql.tailwind/compile-release!)]}
+                :tailwind/output  "resources/public/app.css"
+                :tailwind/files   {:base-path "."
+                                   :tailwind.css "./resources/tw/style.css"}
+                :compiler-options {:infer-externs :auto}
+                :modules          {
+                                   :main {:entries [cos.core]
+                                          :init-fn cos.core/init}}
+
+
+                :devtools         {
+                                   :http-port 8021
+                                   :http-root "resources/public/"
+                                   :after-load cos.core/re-render
+                                   :preloads  [devtools.preload shadow.remote.runtime.cljs.browser]}}}}

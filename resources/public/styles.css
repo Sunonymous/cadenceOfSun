@@ -1,0 +1,160 @@
+/* Set font for headings to Playfair Display, and Source Sans 3 for body text and prose. */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', serif;
+}
+
+/* Simple Color System */
+:root {
+    --bg:     #F5F0E1;
+    --text:   #382F24;
+    --accent: #D99058;
+    --secondary: #B3A28F;
+}
+/* :wheat {:bg "#F5F0E1" :text "#382F24" :accent "#D99058" :secondary "#B3A28F"} */
+
+#app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+nav {
+    font-family: 'Source Sans 3', sans-serif;
+    background-color: var(--secondary);
+    padding: "0.5em 1.25em";
+    color: var(--text);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 0.5em 2em;
+}
+nav a {
+    color: var(--bg);
+    text-decoration: none;
+    transition: font-weight 0.2s ease-in-out;
+    font-size:1.25rem;
+    font-weight: 600;
+}
+nav a:hover {
+    font-weight: 900;
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: 'Source Sans 3', sans-serif;
+    margin: 0;
+}
+
+.thick {
+    font-weight: 700;
+}
+
+.accent {
+    color: var(--accent);
+    font-weight: bold;
+    font-weight: 700;
+}
+
+.content-box {
+    margin-top: 1rem;
+    padding: 1rem;
+    border: 2px solid var(--secondary);
+    border-radius: 1rem;
+    color: var(--text);
+    background-color: white;
+}
+
+.content-header {
+    padding: 0.25rem 1rem;;
+    padding-bottom: 0.5rem;
+    border-radius: 1rem;
+}
+.content-header:hover {
+    /* slightly darken background */
+    background-color: var(--secondary);
+    color: white;
+}
+
+.content-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.thin {
+    width: fit-content;
+}
+
+.half-screen {
+    max-width: 50%;
+}
+
+button {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    margin-top: 2rem;
+    cursor: pointer;
+    background-color: var(--bg);
+    color: var(--text);
+    border: 2px solid var(--secondary);
+    border-radius: 1rem;
+    transition: background-color 0.2s ease-in-out;
+}
+
+button:hover, button:focus {
+    background-color: var(--secondary);
+}
+
+.accordion {
+  /* border-left: 1px solid #ddd; */
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+  /* background-color: #fff; */
+  max-width: 100%;
+  transition: box-shadow 0.7s ease;
+}
+
+.accordion.open {
+  border-right: 1px solid #ddd;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.accordion-title, .accordion-title:focus {
+  background: none;
+  border: none;
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 0;
+  text-align: left;
+  font-size: 1.1rem;
+  font-family: 'Playfair Display', serif;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease, font-weight 0.2s ease;
+}
+
+.accordion-title.open {
+    font-weight: 700;
+}
+
+.accordion-title:hover {
+  background-color: #eee;
+  text-decoration: underline;
+}
+
+.accordion-content {
+  max-height: 0;
+  font-family: 'Source Sans 3', sans-serif;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  padding: 0 1rem;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.accordion.open .accordion-content {
+  padding: 1rem;
+  max-height: 500px; /* adjust if needed */
+  transition: max-height 0.3s ease, padding 0.3s ease;
+}
