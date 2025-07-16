@@ -89,6 +89,12 @@ body {
     max-width: 50%;
 }
 
+/* TODO links have no styling; they keep getting overriden by "tailwind" */
+a {
+    /* color: var(--accent); */
+    cursor: pointer;
+}
+
 button {
     padding: 0.5rem 1rem;
     font-size: 1rem;
