@@ -34,9 +34,8 @@ jobs:
         run: |
           mkdir -p release
           cp resources/public/index.html release/
-          cp -r resources/public/css release/ || true
-          cp -r resources/public/img release/ || true
-          cp public/js/main.js release/
+          cp resources/public/styles.css release/
+          cp resources/public/js/main.js release/
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
