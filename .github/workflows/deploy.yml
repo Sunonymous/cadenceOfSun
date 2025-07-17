@@ -33,9 +33,7 @@ jobs:
       - name: Copy static site files
         run: |
           mkdir -p release
-          cp resources/public/index.html release/
-          cp resources/public/styles.css release/
-          cp resources/public/js/main.js release/
+          cp -r resources/public/* release/
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
