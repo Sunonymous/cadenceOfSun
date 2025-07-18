@@ -24,5 +24,5 @@
      {:style {:list-style-type :disc
               :padding-left "1em"}}
      [:li "Making this website"]
-     [:li "Prototyping " [:a {:href "/#/keer"} "Keer"]]
+     [:li "Prototyping " [:a {:href "#/keer"} "Keer"]]
      [:li "Exploring Stamps ideology"]]]])

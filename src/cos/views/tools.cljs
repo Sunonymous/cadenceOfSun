@@ -19,7 +19,7 @@
 (def tools
   {:keer   {:name        "Keer"
             :description "help practice a musical motion in all twelve keys."
-            :url         "/#/keer"
+            :url         "#/keer"
             :children    [:ul {:style {:list-style-type :disc
                                        :padding-left "1.5em"}}
                           [:li [accordion "Who might find this useful?"
