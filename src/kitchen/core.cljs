@@ -146,7 +146,7 @@
 (defn order-confirmation-prompt
   []
   (let [order (sort @(re-frame/subscribe [::subs/meal-order]))
-        _ (js/console.log (str "order: " order))]
+        valid-order? (seq order)]
     [:div
      {}
      [:h2 {:style {:text-align :center :font-size "2em"}}
@@ -173,8 +173,12 @@
                    :justify-content "space-between"
                    :gap             "1em"}}
           (or (-> foods (get food) :nickname) (-> foods (get food) :name))
-          [:img.food-thumbnail.bigger {:src (-> foods (get food) :img)}]
-          ]))]
+          [:img.food-thumbnail.bigger {:src (-> foods (get food) :img)}]]))
+      (when-not valid-order?
+        [:p {:style {:text-align :center :font-size "1.5em"
+                     :font-weight 700}}
+         "You did not choose any food!"])]
+
      [:h3
       {:style {:text-align :center :font-size "1.5em"
                :margin-block "0.5em"}}
@@ -185,6 +189,7 @@
                :gap "1em"}}
       [:button
        {:style {:all :revert :font-size "1.5em"}
+        :disabled (not valid-order?)
         :on-click #(re-frame/dispatch [::events/next-stage])}
        "Yes"]
       [:button
