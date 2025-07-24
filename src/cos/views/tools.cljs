@@ -80,7 +80,7 @@
 (defn tool->li
   "Given a keyword reference to a tool, return a hiccuped list item."
   [t]
-  [:li.content-box.half-screen ; remember to attach key!
+  [:li.content-box ; remember to attach key!
    {:key (-> tools t :name)}
    (if (-> tools t :url)
      [:a {:href (-> tools t :url)
