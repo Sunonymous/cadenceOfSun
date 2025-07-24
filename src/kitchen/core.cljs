@@ -3,7 +3,8 @@
             [re-frame.core :as re-frame]
             [kitchen.events :as events]
             [kitchen.subs :as subs]
-            [kitchen.data :refer [foods]]))
+            [kitchen.data :refer [foods]]
+            [clojure.string :as str]))
 
 ;; TODO strip foods for categories and make "show all ___ " buttons
 
@@ -215,13 +216,12 @@
      [:div
       {:style {:margin-block "1em"
                :text-align   :center}}
-      [:h1 {:style {:text-align :center :font-size "2.5em"}} "Welcome to the Kitchen" ]
+      [:h1 {:style {:text-align :center :font-size "2.5em"}} "Welcome to the Kitchen"]
       [:p  {:style  {:text-align :center :font-size "1.5em"}} "We hope you're hungry!"]
       [:h2 {:style {:text-align :center :font-size "4.5em"
                     :margin-block "1em"}} "👩🏼‍🍳"]
       [:button {:style {:all :revert :font-size "1.5em"}
-                :on-click #(re-frame/dispatch [::events/next-stage])} "Order Food"]
-     ]
+                :on-click #(re-frame/dispatch [::events/next-stage])} "Order Food"]]
 
      :order
      [order-selection-menu]
@@ -240,7 +240,10 @@
        [:div.dot]
        [:div.dot]]
       [:p.status-text "Cooking in progress..."]
-      ]
+      [:p
+       {:style {:text-align :center :font-size "0.75em"}}
+       ;; TODO improve for natural language
+       (str "Preparing your " (str/join ", " @(re-frame/subscribe [::subs/meal-order])) ".")]]
 
      :ready
      [:div {:style {:display :flex :flex-direction :column :align-items :center}}
@@ -258,12 +261,10 @@
                 :text-align    :center}}
        "Wash your hands and come to the table."
        [:br]
-       "Thanks for ordering with us!"
-      ]
+       "Thanks for ordering with us!"]
       [:button {:style {:all :revert :font-size "1.5em"}
                 :on-click #((re-frame/dispatch [::events/next-stage])
                             (re-frame/dispatch [::events/next-stage])
                             (re-frame/dispatch [::events/clear-order]))}
-       "You're welcome! Bye!"]
-     ])
+       "You're welcome! Bye!"]])
    ])
