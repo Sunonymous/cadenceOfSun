@@ -5,6 +5,11 @@
   [coll i]
   (mod (inc i) (count coll)))
 
+(defn dec-wrap-index
+  "Given a collection and an index, return the previous index, wrapping around to the end if needed."
+  [coll i]
+  (mod (dec i) (count coll)))
+
 (defn copy-to-clipboard [text]
   (-> js/navigator
       .-clipboard
