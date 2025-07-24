@@ -11,8 +11,9 @@
     [cos.views.music        :as music]
     [cos.views.works        :as works]
     [cos.views.connect      :as connect]
-    [keer.views         :as keer]
-    [tools.reframetools :refer [sdb gdb]]))
+    [keer.views             :as keer]
+    [kitchen.core           :as kitchen]
+    [tools.reframetools     :refer [sdb gdb]]))
 
 ;;https://clojure.org/guides/weird_characters#__code_code_var_quote
 (def routes
@@ -34,6 +35,8 @@
         {:name :routes/#connect   :view #'connect/main}]
        ["keer"
         {:name :routes/#keer     :view #'keer/main}]
+       ["kitchen"
+        {:name :routes/#kitchen     :view #'kitchen/main}]
       ]
 
       {:data {:coercion rsc/coercion}}))
