@@ -1,7 +1,8 @@
 (ns kitchen.events
   (:require
    [re-frame.core :as re-frame]
-   [tools.util :refer [inc-wrap-index dec-wrap-index]]))
+   [tools.util    :refer [inc-wrap-index dec-wrap-index]]
+   [kitchen.data  :refer [foods]]))
 
 (re-frame/reg-event-db
  ::toggle-food-selection
@@ -18,7 +19,12 @@
      (update db :meal-order conj food))))
 
 (re-frame/reg-event-db
- ::deselect-all-foods
+ ::offer-all-foods
+ (fn [db _]
+   (assoc db :food-selection (set (keys foods)))))
+
+(re-frame/reg-event-db
+ ::remove-all-offered-foods
  (fn [db _]
    (assoc db :food-selection #{})))
 
