@@ -44,7 +44,7 @@
       {:type       :checkbox
        :checked    is-in-order?
        :on-change #(re-frame/dispatch [::events/toggle-order-selection food-name])
-       :style      {:transform "scale(1.5)"}}]]))
+       :style      {:margin-right "0.5em" :transform "scale(1.5)"}}]]))
 
 (defn select-all-button
   []
@@ -238,7 +238,7 @@
       ]
 
      :ready
-     [:div
+     [:div {:style {:display :flex :flex-direction :column :align-items :center}}
       [:h1 {:style {:text-align :center
                     :font-size  "8em"}} "🛎️🍽️🧑‍🍳"]
       [:h2
@@ -253,5 +253,12 @@
                 :text-align    :center}}
        "Wash your hands and come to the table."
        [:br]
-       "Thanks for ordering with us!"]])
+       "Thanks for ordering with us!"
+      ]
+      [:button {:style {:all :revert :font-size "1.5em"}
+                :on-click #((re-frame/dispatch [::events/next-stage])
+                            (re-frame/dispatch [::events/next-stage])
+                            (re-frame/dispatch [::events/clear-order]))}
+       "You're welcome! Bye!"]
+     ])
    ])

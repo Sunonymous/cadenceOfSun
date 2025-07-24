@@ -19,6 +19,11 @@
      (update db :meal-order conj food))))
 
 (re-frame/reg-event-db
+ ::clear-order
+ (fn [db _]
+   (assoc db :meal-order #{})))
+
+(re-frame/reg-event-db
  ::offer-all-foods
  (fn [db _]
    (assoc db :food-selection (set (keys foods)))))
