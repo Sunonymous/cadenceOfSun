@@ -8,6 +8,7 @@
 
 ;; TODO strip foods for categories and make "show all ___ " buttons
 
+;; TODO move data into db and create pantry to edit db content
 
 
 (defn food-item [item is-included?]
@@ -18,7 +19,6 @@
             :border           "1px solid black"
             :background-color (if is-included? "lightgreen" "white")}
     :on-click #(re-frame/dispatch [::events/toggle-food-selection (:name item)])}
-   ; (or (:nickname item) (:name item)) ; TODO do this for display to diner
    (:name item)])
 
 (defn detailed-food-item [food-name]
@@ -98,28 +98,38 @@
      [next-stage-button "Submit"]]))
 
 (defn control-panel []
-  [:div
-   {:style {:margin-block "1em"
-            :display :flex
-            :justify-content :center
-            :align-items :center}}
-   [:span
-    {:style {:font-size   "2rem"
-             :position    :relative
-             :line-height :1.5rem
-             :user-select :none}
-     :on-click #(re-frame/dispatch [::events/toggle-kitchen-controls])}
-    "🧂"]
-   (when @(re-frame/subscribe [::subs/show-kitchen-controls?])
-     [:div
-      [prev-stage-button]
-      [next-stage-button]])])
+  (let [press-timeout-id (r/atom nil)
+        start-timer!     (fn [_]
+                           (reset! press-timeout-id
+                                   (js/setTimeout #(re-frame/dispatch [::events/toggle-kitchen-controls]) 2500)))
+        clear-timeout!  #(js/clearTimeout @press-timeout-id)]
+    (fn []
+      [:div
+       {:style {:margin-block "1em"
+                :display :flex
+                :justify-content :center
+                :align-items :center}}
+       [:span
+        {:style {:font-size   "2rem"
+                 :position    :relative
+                 :line-height :1.5rem
+                 :user-select :none}
+         :on-touch-start start-timer!
+         :on-touch-end   clear-timeout!
+         :on-mouse-leave clear-timeout!
+         :on-mouse-up    clear-timeout!
+         :on-mouse-down  start-timer!}
+        "🧂"]
+       (when @(re-frame/subscribe [::subs/show-kitchen-controls?])
+         [:div
+          [prev-stage-button]
+          [next-stage-button]])])))
 
 ;; Composites
 
 (defn order-selection-menu
   [] ;; TODO Max number of items
-  ;; TODO required, one of each category?
+     ;; TODO required, one of each category?
   (let [offered-foods @(re-frame/subscribe [::subs/selected-foods])]
     [:div
      [:h2
