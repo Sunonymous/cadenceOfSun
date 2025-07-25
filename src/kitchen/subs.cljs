@@ -1,6 +1,7 @@
 (ns kitchen.subs
   (:require
-   [re-frame.core :as re-frame]))
+   [re-frame.core :as re-frame]
+   [kitchen.data :refer [foods]]))
 
 (re-frame/reg-sub
  ::selected-foods
@@ -21,3 +22,8 @@
  ::show-kitchen-controls?
  (fn [db]
    (:kitchen-controls? db)))
+
+(re-frame/reg-sub
+ ::food-categories
+ (fn [_db] ;; TODO once pantry gets implemented into db, get categories from there
+   (set (map :category (vals foods)))))

@@ -82,20 +82,52 @@
     text]))
 
 (defn food-offering-list [items]
-  (let [selected-foods @(re-frame/subscribe [::subs/selected-foods])]
-    [:div
-     [:div
-      {:style {:display :flex
-               :justify-content :space-around}}
-      [select-all-button]
-      [deselect-all-button]
-      [next-stage-button "Submit"]]
-     [:h3 {:style {:text-align :center :font-size "2em"}} "Choose Foods to Offer:"]
-     [:ul
-      (for [food items] ; checks for inclusion in already-selected foods
-        ^{:key food}
-        [food-item food (selected-foods (:name food))])]
-     [next-stage-button "Submit"]]))
+  (let [categories    @(re-frame/subscribe [::subs/food-categories])
+        cat-filter     (r/atom "")] ; empty string means show all
+    (fn [items]
+      (let [selected-foods @(re-frame/subscribe [::subs/selected-foods])
+            filtered-items (if (= @cat-filter "")
+                             items
+                             (filter #(= (:category %) @cat-filter) items))]
+        [:div
+         [:div
+          {:style {:display :flex
+                   :justify-content :space-around}}
+          [select-all-button]
+          [deselect-all-button]
+          (when (seq categories)
+            [:div
+             [:p "Show "]
+             [:select
+              {:on-change #(reset! cat-filter (.-value (.-target %)))}
+              [:option {:value ""} "All"]
+              (doall
+               (for [category categories]
+                 ^{:key category}
+                 [:option {:value category} (str/capitalize category)]))]
+            ]
+            #_[:div
+             {}
+             [:button
+              {:on-click #(reset! cat-filter nil)
+               :style    {:all :revert}}
+              "Show All"]
+             (doall
+              (for [category categories]
+                ^{:key category}
+                [:button
+                 {:on-click #(reset! cat-filter category)
+                  :style    {:all :revert}}
+                 (str "Show " (str/capitalize (name category)))])
+              )])
+          [next-stage-button "Submit"]]
+         [:h3 {:style {:text-align :center :font-size "2em"}} "Choose Foods to Offer:"]
+         [:ul
+          (doall
+           (for [food filtered-items] ; checks for inclusion in already-selected foods
+             ^{:key food}
+             [food-item food (selected-foods (:name food))]))]
+         [next-stage-button "Submit"]]))))
 
 (defn control-panel []
   (let [press-timeout-id (r/atom nil)
@@ -236,7 +268,8 @@
         0 "Gone to lunch."
         1 (str "Preparing your " (first meal-order) ".")
         2 (str "Preparing your " (first meal-order) " and " (second meal-order) ".")
-        (apply concat "Preparing your " (interpose ", and " meal-order) "."))]]))
+        (apply concat "Preparing your " (interpose ", and " meal-order) ".") ;; TODO this one needs to be adjusted
+       )]]))
 
 (defn main []
   [:div
