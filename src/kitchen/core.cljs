@@ -104,22 +104,7 @@
               (doall
                (for [category categories]
                  ^{:key category}
-                 [:option {:value category} (str/capitalize category)]))]
-            ]
-            #_[:div
-             {}
-             [:button
-              {:on-click #(reset! cat-filter nil)
-               :style    {:all :revert}}
-              "Show All"]
-             (doall
-              (for [category categories]
-                ^{:key category}
-                [:button
-                 {:on-click #(reset! cat-filter category)
-                  :style    {:all :revert}}
-                 (str "Show " (str/capitalize (name category)))])
-              )])
+                 [:option {:value category} (str/capitalize category)]))]])
           [next-stage-button "Submit"]]
          [:h3 {:style {:text-align :center :font-size "2em"}} "Choose Foods to Offer:"]
          [:ul
