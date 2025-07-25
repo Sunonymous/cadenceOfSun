@@ -121,9 +121,12 @@
          :on-mouse-down  start-timer!}
         "🧂"]
        (when @(re-frame/subscribe [::subs/show-kitchen-controls?])
-         [:div
+         [:div  ;; TODO add additional settings based on stage
           [prev-stage-button]
-          [next-stage-button]])])))
+          [next-stage-button]
+          ;; (case @(re-frame/subscribe [::subs/kitchen-stage])
+          ;; )
+          ])])))
 
 ;; Composites
 
@@ -233,8 +236,7 @@
         0 "Gone to lunch."
         1 (str "Preparing your " (first meal-order) ".")
         2 (str "Preparing your " (first meal-order) " and " (second meal-order) ".")
-        :else
-        (str "Preparing your " (interpose ", and " meal-order) "."))]]))
+        (apply concat "Preparing your " (interpose ", and " meal-order) "."))]]))
 
 (defn main []
   [:div
