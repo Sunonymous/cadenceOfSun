@@ -4,7 +4,6 @@
    [tools.util :refer [copy-to-clipboard]]))
 
 ;; TODO add skippable high-low-buffalo game
-;; TODO obfuscate email
 
 (defn personal-description []
   [:p "I'm Sunny. ☀️ "])
@@ -23,17 +22,22 @@
       ])))
 
 (defn main []
+  (let [address-1  "embodied"
+        address-2  "sunshine"
+        protocol   "com"   ;; the simple man's obfuscation...
+        domain     "gmail" ;  hope it works
+        full       (str address-1 address-2 "@" domain "." protocol)]
     [:div.p-4
      {:class ["width-full" :p-2 "rounded-[5px]"]}
      [:h2.text-4xl.thick "· connect ·"]
      [:p.my-4 "I am happy to hear from you. Left-click for mail app. Right-click for copy."]
      [:p.my-4.content-box.thin
-      [:a {:href "mailto:embodiedsunshine@gmail.com"
+      [:a {:href (str "mailto:" full)
            :style {:cursor :pointer
                    :font-size :1.25rem
                    :font-weight :bold
                    :font-family "Playfair Display, serif"}
-           :on-context-menu (fn [e] (.preventDefault e)
-                              (copy-to-clipboard "embodiedsunshine@gmail.com"))}
+           :on-context-menu (fn [e] (.preventDefault e) ;; TODO add some indication of this
+                              (copy-to-clipboard full))}
        "📧 Email me!"]]
-    ])
+     ]))
