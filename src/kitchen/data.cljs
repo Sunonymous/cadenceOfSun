@@ -14,7 +14,7 @@
                                            :category "side"}
             "Bread Roll"                  {:name     "Bread Roll"
                                            :img      "https://www.melskitchencafe.com/wp-content/uploads/2014/03/whole-wheat-rolls7-600x399.jpg"
-                                           :category "side"} ;; TODO is this one broken somehow??
+                                           :category "side"}
             ;; "Cachapa"                     {:name "Cachapa", :img "", :category "meal"},
             "Cheerios"                    {:name     "Cheerios"
                                            :img      "https://cdn.cupcakeproject.com/wp-content/uploads/2012/02/Frosted+Cheerios.jpg"
