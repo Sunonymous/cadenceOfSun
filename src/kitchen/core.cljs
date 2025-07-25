@@ -89,23 +89,20 @@
                :justify-content :space-around}}
       [select-all-button]
       [deselect-all-button]
-      [next-stage-button "Submit"]
-     ]
+      [next-stage-button "Submit"]]
      [:h3 {:style {:text-align :center :font-size "2em"}} "Choose Foods to Offer:"]
      [:ul
       (for [food items] ; checks for inclusion in already-selected foods
         ^{:key food}
         [food-item food (selected-foods (:name food))])]
-      [next-stage-button "Submit"]
-     ]))
+     [next-stage-button "Submit"]]))
 
 (defn control-panel []
   [:div
    {:style {:margin-block "1em"
             :display :flex
             :justify-content :center
-            :align-items :center
-           }}
+            :align-items :center}}
    [:span
     {:style {:font-size   "2rem"
              :position    :relative
@@ -122,27 +119,33 @@
 
 (defn order-selection-menu
   [] ;; TODO Max number of items
-     ;; TODO required, one of each category?
-  (let [offered-foods @(re-frame/subscribe [::subs/selected-foods])
-        meal-order    @(re-frame/subscribe [::subs/meal-order])]
+  ;; TODO required, one of each category?
+  (let [offered-foods @(re-frame/subscribe [::subs/selected-foods])]
     [:div
-     {}
      [:h2
       {:style {:text-align :center :font-size "2.5em" :font-weight 700}}
       "Order Selection"]
-     [:p
-      {:style {:text-align :center :font-size "2em"}}
-      "Choose the food you want to eat:"]
-     [:ul
-      (for [food offered-foods]
-        ^{:key food}
-        [detailed-food-item food])
-      ]
-     [:div
-      {:style {:display :flex
-               :justify-content :space-around}}
-      [next-stage-button "Continue"]]
-     ]))
+     (if (seq offered-foods)
+       [:div
+        [:p
+         {:style {:text-align :center :font-size "2em"}}
+         "Choose the food you want to eat:"]
+        [:ul
+         (for [food offered-foods]
+           ^{:key food}
+           [detailed-food-item food])]
+        [:div
+         {:style {:display :flex
+                  :justify-content :space-around}}
+         [next-stage-button "Continue"]]]
+       [:div
+        [:p
+         {:style {:text-align :center :font-size "1em" :font-weight 600}}
+         "No food is currently offered. Please check back later."]
+        [:p
+         {:style {:text-align :center :font-size "4em"}}
+         "⚠️🤷🏻🫙"
+        ]])]))
 
 (defn order-confirmation-prompt
   []
@@ -198,6 +201,31 @@
         :on-click #(re-frame/dispatch [::events/previous-stage])}
        "No"]]]))
 
+(defn preparation-stage
+  []
+  (let [meal-order @(re-frame/subscribe [::subs/meal-order])]
+    [:div
+     {:style {:margin-block "4em"}}
+     [:p.status-text
+      {:style {:text-align :center :font-size "3em"}}
+      (if (seq meal-order)
+        "🔥"
+        "🏖️")]
+     [:div.cooking-animation
+      [:div.dot]
+      [:div.dot]
+      [:div.dot]]
+     [:p.status-text (if (seq meal-order)
+                       "Cooking in progress..."
+                       "Kitchen is closed.")]
+     [:p {:style {:text-align :center :font-size "0.75em"}}
+      (case (count meal-order)
+        0 "Gone to lunch."
+        1 (str "Preparing your " (first meal-order) ".")
+        2 (str "Preparing your " (first meal-order) " and " (second meal-order) ".")
+        :else
+        (str "Preparing your " (interpose ", and " meal-order) "."))]]))
+
 (defn main []
   [:div
    {:style {:max-width        :800px
@@ -219,7 +247,7 @@
       [:h1 {:style {:text-align :center :font-size "2.5em"}} "Welcome to the Kitchen"]
       [:p  {:style  {:text-align :center :font-size "1.5em"}} "We hope you're hungry!"]
       [:h2 {:style {:text-align :center :font-size "4.5em"
-                    :margin-block "1em"}} "👩🏼‍🍳"]
+                    :margin-block "1em"}} "🧑🏿‍🍳👨🏻‍🍳👩🏼‍🍳👩🏾‍🍳"]
       [:button {:style {:all :revert :font-size "1.5em"}
                 :on-click #(re-frame/dispatch [::events/next-stage])} "Order Food"]]
 
@@ -230,25 +258,12 @@
      [order-confirmation-prompt]
 
      :prepare
-     [:div
-      {:style {:margin-block "4em"}}
-      [:p.status-text
-       {:style {:text-align :center :font-size "3em"}}
-       "🔥"]
-      [:div.cooking-animation
-       [:div.dot]
-       [:div.dot]
-       [:div.dot]]
-      [:p.status-text "Cooking in progress..."]
-      [:p
-       {:style {:text-align :center :font-size "0.75em"}}
-       ;; TODO improve for natural language
-       (str "Preparing your " (str/join ", " @(re-frame/subscribe [::subs/meal-order])) ".")]]
+     [preparation-stage]
 
      :ready
      [:div {:style {:display :flex :flex-direction :column :align-items :center}}
       [:h1 {:style {:text-align :center
-                    :font-size  "8em"}} "🛎️🍽️🧑‍🍳"]
+                    :font-size  "6em"}} "🛎️🍽️🤵"]
       [:h2
        {:style {:margin-top    "2em"
                 :margin-bottom "1em"
@@ -261,10 +276,13 @@
                 :text-align    :center}}
        "Wash your hands and come to the table."
        [:br]
-       "Thanks for ordering with us!"]
+       "Thanks for ordering with us."]
       [:button {:style {:all :revert :font-size "1.5em"}
                 :on-click #((re-frame/dispatch [::events/next-stage])
                             (re-frame/dispatch [::events/next-stage])
                             (re-frame/dispatch [::events/clear-order]))}
-       "You're welcome! Bye!"]])
-   ])
+       "You're welcome. Bye!"]])])
+
+(comment
+
+  :rcf)
