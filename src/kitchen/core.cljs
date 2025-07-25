@@ -95,6 +95,11 @@
                    :justify-content :space-around}}
           [select-all-button]
           [deselect-all-button]
+          ;; TODO add preset saving and loading
+          #_[:button
+           {:disabled (empty? selected-foods)
+            :style {:all :revert}}
+           "Save Preset"]
           (when (seq categories)
             [:div
              [:p "Show "]
