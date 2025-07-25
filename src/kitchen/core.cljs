@@ -1,15 +1,14 @@
 (ns kitchen.core
-  (:require [reagent.core :as r]
-            [re-frame.core :as re-frame]
-            [kitchen.events :as events]
-            [kitchen.subs :as subs]
-            [kitchen.data :refer [foods]]
-            [clojure.string :as str]))
-
-;; TODO strip foods for categories and make "show all ___ " buttons
+  (:require [reagent.core   :as    r]
+            [clojure.string :as    str]
+            [kitchen.subs   :as    subs]
+            [kitchen.events :as    events]
+            [re-frame.core  :as    re-frame]
+            [kitchen.data   :refer [foods]]))
 
 ;; TODO move data into db and create pantry to edit db content
 
+;; TODO adjust de/select all buttons to only work with filtered items
 
 (defn food-item [item is-included?]
   [:li
@@ -319,5 +318,4 @@
        "You're welcome. Bye!"]])])
 
 (comment
-
   :rcf)
