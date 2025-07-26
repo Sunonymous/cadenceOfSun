@@ -27,3 +27,8 @@
  ::food-categories
  (fn [_db] ;; TODO once pantry gets implemented into db, get categories from there
    (set (map :category (vals foods)))))
+
+(re-frame/reg-sub
+ ::kitchen-presets
+ (fn [db]
+   (:kitchen-presets db)))

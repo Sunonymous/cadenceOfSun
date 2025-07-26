@@ -83,22 +83,47 @@
     text]))
 
 (defn food-offering-list [items]
-  (let [categories    @(re-frame/subscribe [::subs/food-categories])
-        cat-filter     (r/atom "")] ; empty string means show all
+  (let [categories        @(re-frame/subscribe [::subs/food-categories])
+        cat-filter         (r/atom "") ; empty string means show all
+        active-preset      (r/atom nil)]
     (fn [items]
-      (let [selected-foods @(re-frame/subscribe [::subs/selected-foods])
+      (let [presets @(re-frame/subscribe [::subs/kitchen-presets])
+            selected-foods @(re-frame/subscribe [::subs/selected-foods])
             filtered-items (if (= @cat-filter "")
                              items
                              (filter #(= (:category %) @cat-filter) items))]
         [:div
          [:div
-          {:style {:display :flex
-                   :justify-content :space-around}}
+          {:style {:display         :flex
+                   :justify-content :space-around
+                   :align-items     :center}}
           [select-all-button]
           [deselect-all-button]
-          ;; TODO add preset saving and loading
-          #_[:button
+          (when (seq presets)
+            [:div
+             [:select
+              {:on-change (fn [e] (let [preset (-> e .-target .-value)]
+                                    (reset! active-preset preset)
+                                    (re-frame/dispatch [::events/load-offer-preset preset])))}
+              [:option {:value ""} "Load Preset"]
+              (doall
+               (for [preset (keys presets)]
+                 ^{:key preset}
+                 [:option {:value preset} preset]))]
+             (when @active-preset
+               [:button
+                {:on-click (fn [_]
+                             (re-frame/dispatch [::events/delete-offer-preset @active-preset])
+                             (reset! active-preset nil))
+                 :style {:all :revert :margin-left "0.5em"}
+                 :disabled (not @active-preset)}
+                "X"])])
+          [:button
            {:disabled (empty? selected-foods)
+            :on-click (fn [_]
+                        (let [proposed-name? (.trim (js/prompt "Preset name?"))]
+                          (when (seq proposed-name?)
+                            (re-frame/dispatch [::events/save-offer-preset proposed-name? selected-foods]))))
             :style {:all :revert}}
            "Save Preset"]
           (when (seq categories)
@@ -182,7 +207,9 @@
            {:style {:text-align :center :font-size "2em"}}
            "Choose the food you want to eat:"]
           (when @max-items
-            [:h3 {:style {:text-align :center :font-size "1.5em"}} "Select up to " @max-items " items"])
+            (let [greater-than-1? (> @max-items 1)]
+              [:h3 {:style {:text-align :center :font-size "1.5em"}}
+               "Select " (when greater-than-1? "up to ") @max-items " item" (when greater-than-1? "s")]))
           [:ul
            (doall
             (for [food offered-foods]

@@ -54,3 +54,20 @@
  ::toggle-kitchen-controls
  (fn [db _]
    (update db :kitchen-controls? not)))
+
+(re-frame/reg-event-db
+ ::save-offer-preset
+ (fn [db [_ name food-selection]]
+   (assoc-in db [:kitchen-presets name] food-selection)))
+
+(re-frame/reg-event-db
+ ::load-offer-preset
+ (fn [db [_ name]]
+   (assoc db :food-selection (get-in db [:kitchen-presets name]))))
+
+(re-frame/reg-event-db
+ ::delete-offer-preset
+ (fn [db [_ name]]
+   (update db :kitchen-presets dissoc name)))
+
+;; TODO add db persistance to these events!
