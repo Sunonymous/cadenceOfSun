@@ -169,7 +169,7 @@
          :on-mouse-down  start-timer!}
         "🧂"]
        (when @(re-frame/subscribe [::subs/show-kitchen-controls?])
-         [:div  ;; TODO add additional settings based on stage
+         [:div
           [prev-stage-button]
           [next-stage-button]
           ;; (case @(re-frame/subscribe [::subs/kitchen-stage])
@@ -182,7 +182,7 @@
   []
   ;; TODO required, one of each category?
   (let [offered-foods @(re-frame/subscribe [::subs/selected-foods])
-        max-items     (r/atom 2)]
+        max-items     (r/atom nil)]
     (fn []
       [:div
        (when @(re-frame/subscribe [::subs/show-kitchen-controls?])
