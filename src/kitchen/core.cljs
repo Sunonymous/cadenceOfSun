@@ -20,7 +20,8 @@
     :on-click #(re-frame/dispatch [::events/toggle-food-selection (:name item)])}
    (:name item)])
 
-(defn detailed-food-item [food-name]
+(defn detailed-food-item [food-name can-select?]
+  ;; can-select? is there to only allow the child to select a number of foods
   (let [food         (foods food-name)
         meal-order  @(re-frame/subscribe [::subs/meal-order])
         is-in-order? (boolean (meal-order food-name))]
@@ -40,11 +41,12 @@
        {:style {:font-size "1.5em"
                 :display :inline-block}}
        (or (:nickname food) (:name food))]]
-     [:input
-      {:type       :checkbox
-       :checked    is-in-order?
-       :on-change #(re-frame/dispatch [::events/toggle-order-selection food-name])
-       :style      {:margin-right "0.5em" :transform "scale(1.5)"}}]]))
+     (when (or can-select? is-in-order?)
+       [:input
+        {:type       :checkbox
+         :checked    is-in-order?
+         :on-change #(re-frame/dispatch [::events/toggle-order-selection food-name])
+         :style      {:margin-right "0.5em" :transform "scale(1.5)"}}])]))
 
 (defn select-all-button
   []
@@ -152,34 +154,52 @@
 ;; Composites
 
 (defn order-selection-menu
-  [] ;; TODO Max number of items
-     ;; TODO required, one of each category?
-  (let [offered-foods @(re-frame/subscribe [::subs/selected-foods])]
-    [:div
-     [:h2
-      {:style {:text-align :center :font-size "2.5em" :font-weight 700}}
-      "Order Selection"]
-     (if (seq offered-foods)
-       [:div
-        [:p
-         {:style {:text-align :center :font-size "2em"}}
-         "Choose the food you want to eat:"]
-        [:ul
-         (for [food offered-foods]
-           ^{:key food}
-           [detailed-food-item food])]
-        [:div
-         {:style {:display :flex
-                  :justify-content :space-around}}
-         [next-stage-button "Continue"]]]
-       [:div
-        [:p
-         {:style {:text-align :center :font-size "1em" :font-weight 600}}
-         "No food is currently offered. Please check back later."]
-        [:p
-         {:style {:text-align :center :font-size "4em"}}
-         "⚠️🤷🏻🫙"
-        ]])]))
+  []
+  ;; TODO required, one of each category?
+  (let [offered-foods @(re-frame/subscribe [::subs/selected-foods])
+        max-items     (r/atom 2)]
+    (fn []
+      [:div
+       (when @(re-frame/subscribe [::subs/show-kitchen-controls?])
+         [:div
+          [:label "Max # of Foods: "]
+          [:input
+           {:type       :number
+            :min        1
+            :max        (count offered-foods)
+            :on-change  (fn [e] (let [num (js/parseInt (.-value (.-target e)))]
+                                  (reset! max-items (if (js/isNaN num) nil num))))
+            :value      @max-items
+            :style      {:margin-left "0.5em" :border "1px solid black"}}
+           ]
+          ])
+       [:h2
+        {:style {:text-align :center :font-size "2.5em" :font-weight 700}}
+        "Order Selection"]
+       (if (seq offered-foods)
+         [:div
+          [:p
+           {:style {:text-align :center :font-size "2em"}}
+           "Choose the food you want to eat:"]
+          (when @max-items
+            [:h3 {:style {:text-align :center :font-size "1.5em"}} "Select up to " @max-items " items"])
+          [:ul
+           (doall
+            (for [food offered-foods]
+              ^{:key food}
+              [detailed-food-item food (or (nil? @max-items) ;; no maximum
+                                           (< (count @(re-frame/subscribe [::subs/meal-order])) @max-items))]))]
+          [:div
+           {:style {:display :flex
+                    :justify-content :space-around}}
+           [next-stage-button "Continue"]]]
+         [:div
+          [:p
+           {:style {:text-align :center :font-size "1em" :font-weight 600}}
+           "No food is currently offered. Please check back later."]
+          [:p
+           {:style {:text-align :center :font-size "4em"}}
+           "⚠️🤷🏻🫙"]])])))
 
 (defn order-confirmation-prompt
   []
