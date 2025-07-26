@@ -119,6 +119,12 @@
             "Tortilla Chips"              {:name     "Tortilla Chips"
                                            :img      "https://www.onelovelylife.com/wp-content/uploads/2022/03/Baked-Tortilla-Chips15-2.jpg"
                                            :category "side"}
+            "Watermelon"                  {:name     "Watermelon"
+                                           :img      "https://hips.hearstapps.com/hmg-prod/images/fresh-ripe-watermelon-slices-on-wooden-table-royalty-free-image-1684966820.jpg"
+                                           :category "fruit"}
+            "Pouch"                       {:name     "Pouch"
+                                           :img      "https://www.beechnut.com/wp-content/uploads/2025/05/052200010303_Beech-Nut-Veggies-Stage-2-Baby-Food-Zucchini-Spinach-Banana-Pouch.png"
+                                           :category "side"}
             "Waffles"                     {:name     "Waffles"
                                            :img      "https://cdn.apartmenttherapy.info/image/upload/f_auto,q_auto:eco,c_fit,w_730,h_974/k%2FEdit%2F2022-11-Kodiak-Waffles-Review%2Fwaffles_on_plate"
                                            :category "breakfast"}
