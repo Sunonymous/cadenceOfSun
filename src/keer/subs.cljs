@@ -25,21 +25,12 @@
    (:use-sharps? db)))
 
 (re-frame/reg-sub
- ::tone-at-index
- (fn [db [index]]
-   (nth (if (:use-sharps? db) tones-with-sharps tones-with-flats) index :bad-index)))
-
-(re-frame/reg-sub
  ::semitone-adjustment
  (fn [db] (:semitone-adjustment db)))
 
 (re-frame/reg-sub
  ::previous-tone
  (fn [db] (:previous-tone db)))
-
-(re-frame/reg-sub
- ::tone-at-index
- (fn [db [_ index]] (nth (:tone-sequence db) index)))
 
 (re-frame/reg-sub
  ::number-of-laps
