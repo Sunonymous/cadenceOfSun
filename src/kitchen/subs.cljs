@@ -32,3 +32,13 @@
  ::kitchen-presets
  (fn [db]
    (:kitchen-presets db)))
+
+(re-frame/reg-sub
+ ::custom-greeting
+ (fn [db]
+   (:custom-greeting db)))
+
+(re-frame/reg-sub
+ ::custom-subtitle
+ (fn [db]
+   (:custom-subtitle db)))

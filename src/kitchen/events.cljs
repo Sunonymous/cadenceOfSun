@@ -80,4 +80,14 @@
  (fn [db [_ name]]
    (update db :kitchen-presets dissoc name)))
 
+(re-frame/reg-event-db
+ ::set-custom-greeting
+ (fn [db [_ greeting]]
+   (assoc db :custom-greeting greeting)))
+
+(re-frame/reg-event-db
+ ::set-custom-subtitle
+ (fn [db [_ subtitle]]
+   (assoc db :custom-subtitle subtitle)))
+
 ;; TODO add db persistance to these events!

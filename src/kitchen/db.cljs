@@ -6,4 +6,6 @@
    :meal-order        #{}
    :kitchen-controls? true ; "parent mode"
    :kitchen-presets   {}   ; map of user-provided {"name" #{food-selection}}
+   :custom-greeting   ""   ;
+   :custom-subtitle   ""   ;
   })

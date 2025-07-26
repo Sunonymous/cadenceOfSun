@@ -342,15 +342,39 @@
 
 (defn greeting-stage
   []
-  [:div
-   {:style {:margin-block "1em"
-            :text-align   :center}}
-   [:h1 {:style {:text-align :center :font-size "2.5em"}} "Welcome to the Kitchen"]
-   [:p  {:style  {:text-align :center :font-size "1.5em"}} "We hope you're hungry!"]
-   [:h2 {:style {:text-align :center :font-size "4.5em"
-                 :margin-block "1em"}} "🧑🏿‍🍳👨🏻‍🍳👩🏼‍🍳👩🏾‍🍳"]
-   [:button {:style {:all :revert :font-size "1.5em"}
-             :on-click #(re-frame/dispatch [::events/next-stage])} "Order Food"]])
+  (let [custom-greeting @(re-frame/subscribe [::subs/custom-greeting])
+        custom-subtitle @(re-frame/subscribe [::subs/custom-subtitle])]
+      [:div
+       {:style {:margin-block "1em"
+                :text-align   :center}}
+       (when @(re-frame/subscribe [::subs/show-kitchen-controls?])
+         [:div
+          [:label "Custom Greeting: "]
+          [:input
+           {:style {:border "1px solid black" :border-radius "0.5em" :padding "0.5em"}
+            :value custom-greeting
+            :on-change #(re-frame/dispatch [::events/set-custom-greeting (-> % .-target .-value)])}]
+          [:br]
+          [:br]
+          [:label "Custom Subtitle: "]
+          [:input
+           {:style {:border "1px solid black" :border-radius "0.5em" :padding "0.5em"}
+            :value custom-subtitle
+            :on-change #(re-frame/dispatch [::events/set-custom-subtitle (-> % .-target .-value)])}]])
+       [:h1 {:style {:text-align :center :font-size :2.5em}}
+        (if (seq (.trim custom-greeting))
+          custom-greeting
+          "Welcome to the Kitchen")]
+       [:p  {:style  {:text-align :center :font-size :1.5em}}
+        (if (seq (.trim custom-subtitle))
+          custom-subtitle
+          "We hope you're hungry!")
+        ]
+       [:h2 {:style {:text-align :center :font-size :4.5em
+                     :margin-block :1em}} "🧑🏿‍🍳👨🏻‍🍳👩🏼‍🍳👩🏾‍🍳"]
+       [:button {:style {:all :revert :font-size "1.5em"}
+                 :on-click #(re-frame/dispatch [::events/next-stage])}
+        "Order Food"]]))
 
 (defn main []
   [:div
