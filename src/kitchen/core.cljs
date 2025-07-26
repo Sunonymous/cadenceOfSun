@@ -340,6 +340,18 @@
                            (re-frame/dispatch [::events/clear-order]))}
       "You're welcome. Bye!"]]))
 
+(defn greeting-stage
+  []
+  [:div
+   {:style {:margin-block "1em"
+            :text-align   :center}}
+   [:h1 {:style {:text-align :center :font-size "2.5em"}} "Welcome to the Kitchen"]
+   [:p  {:style  {:text-align :center :font-size "1.5em"}} "We hope you're hungry!"]
+   [:h2 {:style {:text-align :center :font-size "4.5em"
+                 :margin-block "1em"}} "🧑🏿‍🍳👨🏻‍🍳👩🏼‍🍳👩🏾‍🍳"]
+   [:button {:style {:all :revert :font-size "1.5em"}
+             :on-click #(re-frame/dispatch [::events/next-stage])} "Order Food"]])
+
 (defn main []
   [:div
    {:style {:max-width        :800px
@@ -355,15 +367,7 @@
      [food-offering-list (sort-by :name (vals foods))]
 
      :greet
-     [:div
-      {:style {:margin-block "1em"
-               :text-align   :center}}
-      [:h1 {:style {:text-align :center :font-size "2.5em"}} "Welcome to the Kitchen"]
-      [:p  {:style  {:text-align :center :font-size "1.5em"}} "We hope you're hungry!"]
-      [:h2 {:style {:text-align :center :font-size "4.5em"
-                    :margin-block "1em"}} "🧑🏿‍🍳👨🏻‍🍳👩🏼‍🍳👩🏾‍🍳"]
-      [:button {:style {:all :revert :font-size "1.5em"}
-                :on-click #(re-frame/dispatch [::events/next-stage])} "Order Food"]]
+     [greeting-stage]
 
      :order
      [order-selection-menu]
