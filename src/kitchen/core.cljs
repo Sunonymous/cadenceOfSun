@@ -307,6 +307,39 @@
         (apply concat "Preparing your " (interpose ", and " meal-order) ".") ;; TODO this one needs to be adjusted
        )]]))
 
+(defn ready-stage
+  []
+  (let [meal-order @(re-frame/subscribe [::subs/meal-order])]
+    [:div {:style {:display :flex :flex-direction :column :align-items :center}}
+     [:h1 {:style {:text-align :center
+                   :font-size  "6em"}}
+      (if (seq meal-order)
+        "🛎️🍽️🤵"
+        "🥷💨🍴")]
+     [:h2
+      {:style {:margin-top    "2em"
+               :margin-bottom "1em"
+               :font-size     "2em"
+               :text-align    :center}}
+      "Your food is "
+      (if (seq meal-order)
+        "ready!"
+        "missing!")]
+     [:p
+      {:style {:margin-bottom "1em"
+               :font-size     "1.5em"
+               :text-align    :center}}
+      (if (seq meal-order)
+        "Wash your hands and come to the table."
+        "Please remain calm and wait.")
+      [:br]
+      "Thanks for ordering with us."]
+     [:button {:style {:all :revert :font-size "1.5em"}
+               :on-click #((re-frame/dispatch [::events/next-stage])
+                           (re-frame/dispatch [::events/next-stage])
+                           (re-frame/dispatch [::events/clear-order]))}
+      "You're welcome. Bye!"]]))
+
 (defn main []
   [:div
    {:style {:max-width        :800px
@@ -342,27 +375,7 @@
      [preparation-stage]
 
      :ready
-     [:div {:style {:display :flex :flex-direction :column :align-items :center}}
-      [:h1 {:style {:text-align :center
-                    :font-size  "6em"}} "🛎️🍽️🤵"]
-      [:h2
-       {:style {:margin-top    "2em"
-                :margin-bottom "1em"
-                :font-size     "2em"
-                :text-align    :center}}
-       "Your food is ready!"]
-      [:p
-       {:style {:margin-bottom "1em"
-                :font-size     "1.5em"
-                :text-align    :center}}
-       "Wash your hands and come to the table."
-       [:br]
-       "Thanks for ordering with us."]
-      [:button {:style {:all :revert :font-size "1.5em"}
-                :on-click #((re-frame/dispatch [::events/next-stage])
-                            (re-frame/dispatch [::events/next-stage])
-                            (re-frame/dispatch [::events/clear-order]))}
-       "You're welcome. Bye!"]])])
+     [ready-stage])])
 
 (comment
   :rcf)
