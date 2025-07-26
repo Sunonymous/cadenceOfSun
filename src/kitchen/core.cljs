@@ -104,7 +104,9 @@
              [:select
               {:on-change (fn [e] (let [preset (-> e .-target .-value)]
                                     (reset! active-preset preset)
-                                    (re-frame/dispatch [::events/load-offer-preset preset])))}
+                                    (if (= preset "")
+                                      (reset! active-preset nil)
+                                      (re-frame/dispatch [::events/load-offer-preset preset]))))}
               [:option {:value ""} "Load Preset"]
               (doall
                (for [preset (keys presets)]
@@ -180,7 +182,10 @@
 
 (defn order-selection-menu
   []
-  ;; TODO required, one of each category?
+  ;; TODO add another mode to view by category
+  ;; TODO sort display by category
+  ;; TODO required categories, minimum with prompt text
+  ;; TODO add reset order button (for foods you may have lost access to)
   (let [offered-foods @(re-frame/subscribe [::subs/selected-foods])
         max-items     (r/atom nil)]
     (fn []
@@ -313,6 +318,7 @@
     [:div {:style {:display :flex :flex-direction :column :align-items :center}}
      [:h1 {:style {:text-align :center
                    :font-size  "6em"}}
+      ;; TODO add bell sfx
       (if (seq meal-order)
         "🛎️🍽️🤵"
         "🥷💨🍴")]
