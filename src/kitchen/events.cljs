@@ -29,6 +29,16 @@
    (assoc db :food-selection (set (keys foods)))))
 
 (re-frame/reg-event-db
+ ::offer-food
+ (fn [db [_ food]]
+   (update db :food-selection conj food)))
+
+(re-frame/reg-event-db
+ ::remove-offered-food
+ (fn [db [_ food]]
+   (update db :food-selection disj food)))
+
+(re-frame/reg-event-db
  ::remove-all-offered-foods
  (fn [db _]
    (assoc db :food-selection #{})))
