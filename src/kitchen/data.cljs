@@ -13,7 +13,7 @@
                                            :img      "https://www.dole.com/sites/default/files/styles/1536w1152h-webp-80/public/media/2025-01/blueberries.png.webp?itok=TB7kQfoZ-ZTlJRjuu-RoiUHP2J"
                                            :category "fruit"}
             "Bread"                       {:name     "Bread"
-                                           :img      "https://www.seriouseats.com/thmb/yvullEfUT0JuzHm9mWv7Ec7aYW8=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/__opt__aboutcom__coeus__resources__content_migration__serious_eats__seriouseats.com__2018__12__20181220-wheat-bread-loaf-vicky-wasik-30-264ac9dff1b94f2bafb1647b8601fd4a.jpg"
+                                           :img      "https://images.getrecipekit.com/20230728144103-md-100-whole-wheat-bread-11-1-of-1-scaled.jpg"
                                            :category "side"}
             "Bread Roll"                  {:name     "Bread Roll"
                                            :img      "https://www.melskitchencafe.com/wp-content/uploads/2014/03/whole-wheat-rolls7-600x399.jpg"
