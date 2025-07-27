@@ -309,8 +309,10 @@
         0 "Gone to lunch."
         1 (str "Preparing your " (first meal-order) ".")
         2 (str "Preparing your " (first meal-order) " and " (second meal-order) ".")
-        (apply concat "Preparing your " (interpose ", and " meal-order) ".") ;; TODO this one needs to be adjusted
-       )]]))
+        (apply concat "Preparing your "
+               (interpose ", " (take (dec (count meal-order)) meal-order))
+               ", and " (last meal-order) ".")
+      )]]))
 
 (defn ready-stage
   []
@@ -318,9 +320,12 @@
     [:div {:style {:display :flex :flex-direction :column :align-items :center}}
      [:h1 {:style {:text-align :center
                    :font-size  "6em"}}
-      ;; TODO add bell sfx
       (if (seq meal-order)
-        "🛎️🍽️🤵"
+        [:div [:span
+               {:style {:cursor "pointer"}
+                        :on-click #(let [audio (js/Audio. "service-bell.mp3")]
+                                     (.play audio))}
+               "🛎️"] "🍽️🤵"]
         "🥷💨🍴")]
      [:h2
       {:style {:margin-top    "2em"
