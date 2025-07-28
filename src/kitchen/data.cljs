@@ -36,13 +36,15 @@
             "Chocolate Sandwich"          {:name     "Chocolate Sandwich"
                                            :img      "https://annacostafood.wordpress.com/wp-content/uploads/2012/06/mg_8241.jpg"
                                            :category "meal"}
-            ;; TODO add coconut jello
+            "Coconut Jello"               {:name     "Coconut Jello"
+                                           :img      "https://bigflavorstinykitchen.com/wp-content/uploads/2018/06/Coconut-Jelly-2-768x765.jpg"
+                                           :category "meal"}
             "Cream of Wheat"              {:name     "Cream of Wheat"
                                            :img      "https://theabsolutefoodie.com/wp-content/uploads/2023/03/cream-of-wheat-recipes.jpg"
-                                           :category "breakfast"}
+                                           :category "meal"}
             "Dinosaur Egg Oatmeal"        {:name     "Dinosaur Egg Oatmeal"
                                            :img      "https://poorcouplesfoodguide.com/wp-content/uploads/2016/04/103_1795.jpg?w=508"
-                                           :category "breakfast"}
+                                           :category "meal"}
             "Dinosaur Nuggets"            {:name     "Dinosaur Nuggets"
                                            :img      "https://dam.catalog.1worldsync.com/im/dwn/GCP-5102267363491840?v=1&width=1000&height=1000&quality=50&upscale=true&bgcolor=FFFFFF"
                                            :category "meal"}
@@ -74,7 +76,7 @@
                                            :category "treat"}
             "Kashi Cereal"                {:name     "Kashi Cereal"
                                            :img      "https://m.media-amazon.com/images/I/71CilhFM-LL._SL1500_.jpg"
-                                           :category "breakfast"}
+                                           :category "meal"}
             "Laughing Cow Cheese"         {:name     "Laughing Cow Cheese"
                                            :img      "https://www.gfifoods.com/media/catalog/product/cache/f363c0ec9d697ce56276a2431314dc64/5/_/5.4oz20tlc20orig20image_20221108-095436_hxuxem4wpgez1y1n.jpg"
                                            :category "side"}
@@ -83,7 +85,7 @@
                                            :category "treat"}
             "Pancakes"                    {:name     "Pancakes"
                                            :img      "https://myplate-prod.azureedge.us/sites/default/files/styles/recipe_525_x_350_/public/2020-10/Pancakes_527x323.jpg?itok=nsUpQeQi"
-                                           :category "breakfast"}
+                                           :category "meal"}
             "Pasta"                       {:name     "Pasta"
                                            :img      "https://www.girlgonegourmet.com/wp-content/uploads/2023/06/Creamy-Garlic-Pasta-4.jpg"
                                            :category "meal"}
@@ -113,7 +115,7 @@
                                            :category "side"}
             "Three Wishes Cereal"         {:name     "Three Wishes Cereal"
                                            :img      "https://www.mypursestrings.com/wp-content/uploads/2023/08/Three-Wishes-Fruity-cereal-728x410.jpg.webp"
-                                           :category "breakfast"}
+                                           :category "meal"}
             "Toast"                       {:name     "Toast"
                                            :img      "https://www.seriouseats.com/thmb/SU6b7MPNLzzmwuY3BO6YLx17LbI=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/__opt__aboutcom__coeus__resources__content_migration__serious_eats__seriouseats.com__2018__12__20181220-wheat-bread-loaf-vicky-wasik-30-264ac9dff1b94f2bafb1647b8601fd4a.jpg"
                                            :category "side"}
@@ -128,13 +130,13 @@
                                            :category "side"}
             "Waffles"                     {:name     "Waffles"
                                            :img      "https://cdn.apartmenttherapy.info/image/upload/f_auto,q_auto:eco,c_fit,w_730,h_974/k%2FEdit%2F2022-11-Kodiak-Waffles-Review%2Fwaffles_on_plate"
-                                           :category "breakfast"}
+                                           :category "meal"}
             "Whipped Cream"               {:name     "Whipped Cream"
                                            :img      "https://natashaskitchen.com/wp-content/uploads/2025/01/Homemade-Whipped-Cream-Recipe-4.jpg"
                                            :category "treat"}
             "Yogurt"                      {:name     "Yogurt"
                                            :img      "https://images.getrecipekit.com/20240109191538-homemade-yogurt.jpg?width=650&quality=90&"
-                                           :category "side"}})
+                                           :category "treat"}})
 
 (comment
   (group-by :category (vals foods))
