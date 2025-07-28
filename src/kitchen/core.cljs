@@ -321,8 +321,7 @@
   []
   (let [offered-foods     @(re-frame/subscribe [::subs/selected-foods])
         kitchen-controls? @(re-frame/subscribe [::subs/show-kitchen-controls?])
-        by-category?       (r/atom true)
-        *category-status*  (r/atom {})] ; updates as foods are selected
+        by-category?       (r/atom true)]
     (fn []
       [:div
        [:button
@@ -347,7 +346,7 @@
              (doall
               (for [category @(re-frame/subscribe [::subs/offered-categories])]
                 ^{:key category}
-                [order-category-menu offered-foods category *category-status*]))
+                [order-category-menu offered-foods category]))
              [:div
               {:style {:display :flex
                        :justify-content :space-around}}
