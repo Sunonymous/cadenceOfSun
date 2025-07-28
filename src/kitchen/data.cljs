@@ -25,7 +25,7 @@
             "Cheese, Mozarella, Sliced"   {:name     "Cheese, Mozarella, Sliced"
                                            :nickname "Mozarella Cheese"
                                            :img      "https://gfsstore.com/wp-content/uploads/2025/04/726567-RAW-6-1743865073.jpg"
-                                           :category "meal"}
+                                           :category "side"}
             "Cheese, Shredded"            {:name     "Cheese, Shredded"
                                            :nickname "Sprinkle Cheese"
                                            :img      "https://i5.walmartimages.com/seo/Great-Value-Finely-Shredded-Fiesta-Blend-Cheese-16-oz_0cc11725-aea5-4ce6-a0e5-f82d5688d9e9.dc88776f94f883476f847c689b5673eb.jpeg"
@@ -36,6 +36,7 @@
             "Chocolate Sandwich"          {:name     "Chocolate Sandwich"
                                            :img      "https://annacostafood.wordpress.com/wp-content/uploads/2012/06/mg_8241.jpg"
                                            :category "meal"}
+            ;; TODO add coconut jello
             "Cream of Wheat"              {:name     "Cream of Wheat"
                                            :img      "https://theabsolutefoodie.com/wp-content/uploads/2023/03/cream-of-wheat-recipes.jpg"
                                            :category "breakfast"}
@@ -134,3 +135,7 @@
             "Yogurt"                      {:name     "Yogurt"
                                            :img      "https://images.getrecipekit.com/20240109191538-homemade-yogurt.jpg?width=650&quality=90&"
                                            :category "side"}})
+
+(comment
+  (group-by :category (vals foods))
+  :rcf)
