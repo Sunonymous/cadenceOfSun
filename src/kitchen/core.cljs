@@ -324,15 +324,26 @@
         by-category?       (r/atom true)]
     (fn []
       [:div
-       [:button
-        {:style {:all :revert}
-         :on-click #(re-frame/dispatch [::events/clear-order])}
-        "Reset Order"]
-       (when kitchen-controls?
-         [:button
-          {:style {:all :revert}
-           :on-click #(swap! by-category? not)}
-          "Change Mode"])
+       [:div
+        {:style {:display :flex
+                 :justify-content :center
+                 :gap     :1em}}
+        [:button
+         {:style {:all :revert}
+          :on-click #(re-frame/dispatch [::events/clear-order])}
+         "Reset Order"]
+        (when kitchen-controls?
+          [:button
+           {:style {:all :revert}
+            :on-click #(swap! by-category? not)}
+           "Change Mode"])
+        (when kitchen-controls?
+          [:button
+           {:style {:all :revert}
+            :on-click (fn [_]
+                        (re-frame/dispatch [::events/previous-stage])
+                        (re-frame/dispatch [::events/toggle-kitchen-controls]))}
+           "Ready for Diner"])]
        (if @by-category?
          [:div
           [:h2
@@ -344,9 +355,14 @@
               {:style {:text-align :center :font-size "2em"}}
               "Choose the food you want to eat:"]
              (doall
-              (for [category @(re-frame/subscribe [::subs/offered-categories])]
+              (for [category (sort @(re-frame/subscribe [::subs/offered-categories]))]
                 ^{:key category}
-                [order-category-menu offered-foods category]))
+                [:div
+                 [order-category-menu offered-foods category]
+                 [:p {:style {:margin-block  :0.5em
+                              :text-align   :center
+                              :font-size     :1.5em}}
+                  "✶"]]))
              [:div
               {:style {:display :flex
                        :justify-content :space-around}}
