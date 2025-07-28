@@ -90,4 +90,24 @@
  (fn [db [_ subtitle]]
    (assoc db :custom-subtitle subtitle)))
 
+(re-frame/reg-event-db
+ ::require-category-in-order
+ (fn [db [_ category]]
+   (update db :required-categories conj category)))
+
+(re-frame/reg-event-db
+ ::unrequire-category-in-order
+ (fn [db [_ category]]
+   (update db :required-categories disj category)))
+
+(re-frame/reg-event-db
+ ::set-category-min
+ (fn [db [_ category min]]
+   (assoc-in db [:category-stats category :min] min)))
+
+(re-frame/reg-event-db
+ ::set-category-max
+ (fn [db [_ category  max]]
+   (assoc-in db [:category-stats category :max] max)))
+
 ;; TODO add db persistance to these events!

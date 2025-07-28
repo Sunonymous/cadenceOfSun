@@ -151,7 +151,7 @@
   (let [press-timeout-id (r/atom nil)
         start-timer!     (fn [_]
                            (reset! press-timeout-id
-                                   (js/setTimeout #(re-frame/dispatch [::events/toggle-kitchen-controls]) 2500)))
+                                   (js/setTimeout #(re-frame/dispatch [::events/toggle-kitchen-controls]) 2000)))
         clear-timeout!  #(js/clearTimeout @press-timeout-id)]
     (fn []
       [:div
@@ -182,10 +182,6 @@
 
 (defn order-selection-menu
   []
-  ;; TODO add another mode to view by category
-  ;; TODO sort display by category
-  ;; TODO required categories, minimum with prompt text
-  ;; TODO add reset order button (for foods you may have lost access to)
   (let [offered-foods @(re-frame/subscribe [::subs/selected-foods])
         max-items     (r/atom nil)]
     (fn []
@@ -232,6 +228,146 @@
           [:p
            {:style {:text-align :center :font-size "4em"}}
            "⚠️🤷🏻🫙"]])])))
+
+(defn order-category-menu
+  [offered-foods category]
+  (let [foods-in-category (filter #(= category (:category %)) (map (fn [f] (foods f)) offered-foods))]
+    (fn [offered-foods category]
+      (let [minimum       @(re-frame/subscribe [::subs/category-min category])
+            maximum       @(re-frame/subscribe [::subs/category-max category])
+            required? (@(re-frame/subscribe [::subs/required-categories]) category)
+            num-in-order @(re-frame/subscribe [::subs/num-of-order-items-of-category category])
+            valid-order? (or (not required?)
+                             (>= maximum num-in-order minimum))]
+        [:div
+         {:style {:border (str (if required? "3" "2") "px solid " (cond
+                                                                    (and required? valid-order?)       "green"
+                                                                    (and required? (not valid-order?)) "red"
+                                                                    :otherwise                         "black"))
+                  :border-radius "0.5em"
+                  :margin "0.5em"
+                  :padding "0.5em"}}
+         [:div
+          {:style {:display :flex :justify-content :flex-start :align-items :baseline :gap "0.5em"
+                   }}
+          [:h3 {:style {:font-size "1.5em"}}
+           category ":"]
+          (when required?
+            [:p
+             (cond
+               valid-order?
+               (take 1 (shuffle ["Ready!" "Great choice!" "Got it!" "Delicious!" "Yum!"]))
+               (= minimum maximum)
+               (str "(Select " minimum " food" (when (> minimum 1) "s") ".)")
+               :otherwise
+               (str "(Select between " minimum " and " maximum " foods.)"))])]
+         (when @(re-frame/subscribe [::subs/show-kitchen-controls?])
+           [:div
+            {:style {:display :flex :justify-content :center :align-items :baseline :gap "0.5em"}}
+            [:label "Required? "
+             [:input
+              {:type       :checkbox
+               :checked    (boolean required?)
+               :on-change  (fn [e] (re-frame/dispatch [(if (.-checked (.-target e))
+                                                         ::events/require-category-in-order
+                                                         ::events/unrequire-category-in-order)
+                                                       category])
+                             ;; (swap! *category-status* assoc-in [category :min] @minimum)
+                             ;; (swap! *category-status* assoc-in [category :max] @maximum)
+                             )
+               :style      {:margin-left "0.5em" :border "1px solid black"}}]]
+            [:label
+             {:style {:color (if required? "black" "gray")}}
+             "Minimum: "
+             [:input
+              {:type       :number
+               :min        1
+               :max        (count foods-in-category)
+               :on-change  (fn [e] (let [num (js/parseInt (.-value (.-target e)))
+                                         next-num (if (js/isNaN num) 1 num)]
+                                     ;; (reset! minimum (if (js/isNaN num) 1 num))
+                                     ;; (swap! *category-status* assoc-in [category :min] num)
+                                     (re-frame/dispatch [::events/set-category-min category next-num])
+                                     (when (>= next-num maximum)
+                                       (re-frame/dispatch [::events/set-category-max category next-num]))
+                                     ))
+               :value      @(re-frame/subscribe [::subs/category-min category])
+               :style      {:margin-left "0.5em" :border (str "1px solid " (if required? "black" "gray"))
+                            :color (if required? "black" "gray")
+                            :border-radius :4px}}]]
+            [:label "Maximum: "
+             [:input
+              {:type       :number
+               :min        (or @(re-frame/subscribe [::subs/category-min category]) 1)
+               :max        (count foods-in-category)
+               :on-change  (fn [e] (let [num (js/parseInt (.-value (.-target e)))
+                                         next-num (if (js/isNaN num) 1 num)]
+                                     ;; (reset! maximum next-num)
+                                     ;; (swap! *category-status* assoc-in [category :max] num)
+                                     (re-frame/dispatch [::events/set-category-max category next-num])))
+               :value      @(re-frame/subscribe [::subs/category-max category])
+               :style      {:margin-left "0.5em" :border "1px solid black"
+                            :border-radius :4px}}]]
+            ])
+         [:ul
+          (doall
+           (for [food foods-in-category]
+             ^{:key food}
+             [detailed-food-item (:name food) (< num-in-order maximum)]
+             ))]
+         ]))))
+
+(defn order-selection-menu-2
+  []
+  (let [offered-foods     @(re-frame/subscribe [::subs/selected-foods])
+        kitchen-controls? @(re-frame/subscribe [::subs/show-kitchen-controls?])
+        by-category?       (r/atom true)
+        *category-status*  (r/atom {})] ; updates as foods are selected
+    (fn []
+      [:div
+       [:button
+        {:style {:all :revert}
+         :on-click #(re-frame/dispatch [::events/clear-order])}
+        "Reset Order"]
+       (when kitchen-controls?
+         [:button
+          {:style {:all :revert}
+           :on-click #(swap! by-category? not)}
+          "Change Mode"])
+       (if @by-category?
+         [:div
+          [:h2
+           {:style {:text-align :center :font-size "2.5em" :font-weight 700}}
+           "Order Selection"]
+          (if (seq offered-foods)
+            [:div
+             [:p
+              {:style {:text-align :center :font-size "2em"}}
+              "Choose the food you want to eat:"]
+             (doall
+              (for [category @(re-frame/subscribe [::subs/offered-categories])]
+                ^{:key category}
+                [order-category-menu offered-foods category *category-status*]))
+             [:div
+              {:style {:display :flex
+                       :justify-content :space-around}}
+              [:button
+               {:style {:all :revert :font-size "1.5em"}
+                :disabled (not (every? (fn [category]
+                                         (let [min @(re-frame/subscribe [::subs/category-min category])
+                                               max @(re-frame/subscribe [::subs/category-max category])]
+                                           (and min max (<= min @(re-frame/subscribe [::subs/num-of-order-items-of-category category])))))
+                                       @(re-frame/subscribe [::subs/required-categories])))
+                :on-click #(re-frame/dispatch [::events/next-stage])}
+               "Continue"]]]
+            [:div
+             [:p
+              {:style {:text-align :center :font-size "1em" :font-weight 600}}
+              "No food is currently offered. Please check back later."]
+             [:p
+              {:style {:text-align :center :font-size "4em"}}
+              "⚠️🤷🏻🫙"]])]
+         [order-selection-menu])])))
 
 (defn order-confirmation-prompt
   []
@@ -405,7 +541,7 @@
      [greeting-stage]
 
      :order
-     [order-selection-menu]
+     [order-selection-menu-2]
 
      :confirm
      [order-confirmation-prompt]

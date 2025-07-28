@@ -42,3 +42,28 @@
  ::custom-subtitle
  (fn [db]
    (:custom-subtitle db)))
+
+(re-frame/reg-sub
+ ::offered-categories
+ (fn [db]
+   (set (map :category (map #(foods %) (:food-selection db))))))
+
+(re-frame/reg-sub
+ ::required-categories
+ (fn [db]
+   (:required-categories db)))
+
+ (re-frame/reg-sub
+  ::num-of-order-items-of-category
+  (fn [db [_ category]]
+    (count (filter #(= category (:category (foods %))) (:meal-order db)))))
+
+(re-frame/reg-sub
+ ::category-min
+ (fn [db [_ category]]
+   (or (get-in db [:category-stats category :min]) 1)))
+
+(re-frame/reg-sub
+ ::category-max
+ (fn [db [_ category]]
+   (or (get-in db [:category-stats category :max]) 1)))
