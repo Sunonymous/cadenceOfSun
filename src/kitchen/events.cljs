@@ -2,7 +2,8 @@
   (:require
    [re-frame.core :as re-frame]
    [tools.util    :refer [inc-wrap-index dec-wrap-index]]
-   [kitchen.data  :refer [foods]]))
+   [kitchen.data  :refer [foods]]
+   [cos.events    :refer [->localStorage]]))
 
 (re-frame/reg-event-db
  ::toggle-food-selection
@@ -50,12 +51,14 @@
 
 (re-frame/reg-event-db
  ::next-stage
+ [->localStorage]
  (fn [db _]
    (let [current-index (index-of stages (:kitchen-stage db))]
      (assoc db :kitchen-stage (nth stages (inc-wrap-index stages current-index))))))
 
 (re-frame/reg-event-db
  ::previous-stage
+ [->localStorage]
  (fn [db _]
    (let [current-index (index-of stages (:kitchen-stage db))]
      (assoc db :kitchen-stage (nth stages (dec-wrap-index stages current-index))))))
@@ -67,6 +70,7 @@
 
 (re-frame/reg-event-db
  ::save-offer-preset
+ [->localStorage]
  (fn [db [_ name food-selection]]
    (assoc-in db [:kitchen-presets name] food-selection)))
 
@@ -77,6 +81,7 @@
 
 (re-frame/reg-event-db
  ::delete-offer-preset
+ [->localStorage]
  (fn [db [_ name]]
    (update db :kitchen-presets dissoc name)))
 
@@ -92,22 +97,24 @@
 
 (re-frame/reg-event-db
  ::require-category-in-order
+ [->localStorage]
  (fn [db [_ category]]
    (update db :required-categories conj category)))
 
 (re-frame/reg-event-db
  ::unrequire-category-in-order
+ [->localStorage]
  (fn [db [_ category]]
    (update db :required-categories disj category)))
 
 (re-frame/reg-event-db
  ::set-category-min
+ [->localStorage]
  (fn [db [_ category min]]
    (assoc-in db [:category-stats category :min] min)))
 
 (re-frame/reg-event-db
  ::set-category-max
+ [->localStorage]
  (fn [db [_ category  max]]
    (assoc-in db [:category-stats category :max] max)))
-
-;; TODO add db persistance to these events!
