@@ -1,0 +1,50 @@
+.food-name {
+    padding-inline: 0.5em;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 1.5em;
+    font-weight: 400;
+    transition: font-weight 0.3s ease,
+                font-size 0.3s ease;
+}
+
+.food-name:hover, .food-name.targeted {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.food-name.targeted {
+    font-size: 1.75em;
+    font-weight: 500;
+}
+.food-name.targeted:hover {
+    font-weight: 600;
+    background-color: darkgray;
+}
+
+.pantry-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 1em;
+}
+
+.pantry-row > .pantry-description {
+    min-width: 10ch;
+}
+
+
+.food-thumbnail.pantry {
+    margin-inline: auto;
+    animation: fadeIn 1.5s ease-in-out;
+}
+
+/* fade in keyframes animation */
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}

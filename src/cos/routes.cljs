@@ -13,6 +13,7 @@
     [cos.views.connect      :as connect]
     [keer.views             :as keer]
     [kitchen.core           :as kitchen]
+    [pantry.core            :as pantry]
     [tools.reframetools     :refer [sdb gdb]]))
 
 ;;https://clojure.org/guides/weird_characters#__code_code_var_quote
@@ -37,6 +38,8 @@
         {:name :routes/#keer     :view #'keer/main}]
        ["kitchen"
         {:name :routes/#kitchen     :view #'kitchen/main}]
+       ["pantry"
+        {:name :routes/#pantry     :view #'pantry/main}]
       ]
 
       {:data {:coercion rsc/coercion}}))
