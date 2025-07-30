@@ -11,7 +11,7 @@
 (def localStorage-key "cos-db")
 
 (defn db->local-storage
-  [db]
+  [db] ;; :current-route appears to contain data which cannot be serialized via text
   (js/localStorage.setItem localStorage-key (pr-str (dissoc db :current-route))))
 
 (re-frame/reg-cofx
