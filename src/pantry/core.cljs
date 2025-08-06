@@ -73,7 +73,8 @@
   (let [open? (= name @(re-frame/subscribe [::subs/target-food]))]
     [:li
      {:id name
-      :style {:display        :flex
+      :style {:width         "100%"
+              :display        :flex
               :flex-direction :column
               :padding    "1px 0.5em"
               :border-top "1px solid black"
@@ -86,7 +87,8 @@
       name]
      (when open?
        [:div.fade-in
-        {:style {:padding "1em"
+        {:style {:padding-left   "0.75em"
+                 :padding-bottom "0.5em"
                  :display        :flex
                  :flex-direction :column
                  :gap            "0.5em"}}
@@ -106,7 +108,7 @@
                    (prompt-name!)
                    (re-frame/dispatch [::events/add-example-foods])
                  )}
-     "Add Food"]))
+     "➕ Add Food"]))
 
 ;; TODO unsure if this is good idea. idea is -> permanent section
 ;; at top of bottom for adding food, because it is a core functionality
@@ -131,10 +133,10 @@
               :margin         "0 auto"}}
      [:h1 {:style {:font-size :3rem}} "Pantry"]
      [:div
-      {}
+      {:style {:width "100%"}}
       [:div
        {:style {:margin-block "1em"
-                :padding-inline "1em"
+                :padding-inline "0.5em"
                 :display :flex
                 :justify-content :space-between}}
        [add-new-food-button]
