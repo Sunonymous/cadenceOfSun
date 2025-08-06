@@ -4,7 +4,7 @@
             [kitchen.subs   :as    subs]
             [kitchen.events :as    events]
             [re-frame.core  :as    re-frame]
-            [kitchen.data   :refer [foods]]))
+            [pantry.subs    :as    pantry-subs]))
 
 ;; TODO move data into db and create pantry to edit db content
 
@@ -22,7 +22,8 @@
 
 (defn detailed-food-item [food-name can-select?]
   ;; can-select? is there to only allow the child to select a number of foods
-  (let [food         (foods food-name)
+  (let [foods        @(re-frame/subscribe [::pantry-subs/foods])
+        food         (foods food-name)
         meal-order  @(re-frame/subscribe [::subs/meal-order])
         is-in-order? (boolean (meal-order food-name))]
     [:li
@@ -146,6 +147,7 @@
                  [:option {:value category} (str/capitalize category)]))]])
           [next-stage-button "Submit"]]
          [:h3 {:style {:text-align :center :font-size "2em"}} "Choose Foods to Offer:"]
+         ;; TODO create display when there are no foods and encourage visiting pantry
          [:ul
           (doall
            (for [food filtered-items] ; checks for inclusion in already-selected foods
@@ -244,7 +246,8 @@
 
 (defn order-category-menu
   [offered-foods category]
-  (let [foods-in-category (filter #(= category (:category %)) (map (fn [f] (foods f)) offered-foods))]
+  (let [foods @(re-frame/subscribe [::pantry-subs/foods])
+        foods-in-category (filter #(= category (:category %)) (map (fn [f] (foods f)) offered-foods))]
     (fn [offered-foods category]
       (let [minimum       @(re-frame/subscribe [::subs/category-min category])
             maximum       @(re-frame/subscribe [::subs/category-max category])
@@ -402,7 +405,8 @@
 
 (defn order-confirmation-prompt
   []
-  (let [order (sort @(re-frame/subscribe [::subs/meal-order]))
+  (let [foods @(re-frame/subscribe [::pantry-subs/foods])
+        order (sort @(re-frame/subscribe [::subs/meal-order]))
         valid-order? (seq order)]
     [:div
      {}
@@ -566,7 +570,7 @@
    [control-panel]
    (case @(re-frame/subscribe [::subs/kitchen-stage])
      :offer
-     [food-offering-list (sort-by :name (vals foods))]
+     [food-offering-list (sort-by :name (vals @(re-frame/subscribe [::pantry-subs/foods])))]
 
      :greet
      [greeting-stage]

@@ -1,7 +1,7 @@
 (ns kitchen.subs
   (:require
    [re-frame.core :as re-frame]
-   [kitchen.data :refer [foods]]))
+  ))
 
 (re-frame/reg-sub
  ::selected-foods
@@ -25,8 +25,8 @@
 
 (re-frame/reg-sub
  ::food-categories
- (fn [_db] ;; TODO once pantry gets implemented into db, get categories from there
-   (set (map :category (vals foods)))))
+ (fn [db]
+   (set (map :category (vals (:foods db))))))
 
 (re-frame/reg-sub
  ::kitchen-presets
@@ -46,7 +46,7 @@
 (re-frame/reg-sub
  ::offered-categories
  (fn [db]
-   (set (map :category (map #(foods %) (:food-selection db))))))
+   (set (map :category (map #((:foods db) %) (:food-selection db))))))
 
 (re-frame/reg-sub
  ::required-categories
@@ -56,7 +56,7 @@
  (re-frame/reg-sub
   ::num-of-order-items-of-category
   (fn [db [_ category]]
-    (count (filter #(= category (:category (foods %))) (:meal-order db)))))
+    (count (filter #(= category (:category ((:foods db) %))) (:meal-order db)))))
 
 (re-frame/reg-sub
  ::category-min
