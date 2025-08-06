@@ -17,7 +17,7 @@
     :category "Mislabeled Fruit (fix it!)"
     :img      "https://upload.wikimedia.org/wikipedia/commons/4/4c/Bananas.jpg"}
    {:name     "Rotten Apple"
-    :category "Trash Fruit (delete it!)"
+    :category "Trash Fruit (remove it 🗑️!)"
     :img      "https://upload.wikimedia.org/wikipedia/commons/c/c6/Madige-Apfel-Frucht.jpg"}])
 
 (def default-db
