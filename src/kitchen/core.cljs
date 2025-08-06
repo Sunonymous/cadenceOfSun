@@ -67,7 +67,9 @@
   []
   [:button
    {:on-click #(re-frame/dispatch [::events/previous-stage])
-    :style {:all :revert}}
+    :style {:all         :revert
+             :padding     "0.5em 0.5em"
+             :font-weight 600}}
    "Prev Step ⬅️"])
 
 ;; previous stage is an admin function
@@ -79,7 +81,9 @@
   ([text]
    [:button
     {:on-click #(re-frame/dispatch [::events/next-stage])
-     :style {:all :revert}}
+     :style {:all         :revert
+             :padding     "0.5em 0.5em"
+             :font-weight 600}}
     text]))
 
 (defn food-offering-list [items]
@@ -97,8 +101,10 @@
           {:style {:display         :flex
                    :justify-content :space-around
                    :align-items     :center}}
-          [select-all-button]
-          [deselect-all-button]
+          (when (empty? @cat-filter)
+            [select-all-button])
+          (when (empty? @cat-filter)
+            [deselect-all-button])
           (when (seq presets)
             [:div
              [:select
@@ -145,7 +151,11 @@
            (for [food filtered-items] ; checks for inclusion in already-selected foods
              ^{:key food}
              [food-item food (selected-foods (:name food))]))]
-         [next-stage-button "Submit"]]))))
+         [:div
+          {:style {:margin-block :1em
+                   :display :flex
+                   :justify-content :space-around}}
+          [next-stage-button "Submit"]]]))))
 
 (defn control-panel []
   (let [press-timeout-id (r/atom nil)
@@ -332,15 +342,17 @@
         {:style {:display :flex
                  :justify-content :center
                  :gap     :1em}}
-        [:button
-         {:style {:all :revert}
-          :on-click #(re-frame/dispatch [::events/clear-order])}
-         "Reset Order"]
-        (when kitchen-controls?
+        (when (seq @(re-frame/subscribe [::subs/meal-order]))
           [:button
            {:style {:all :revert}
-            :on-click #(swap! by-category? not)}
-           "Change Mode"])
+            :on-click #(re-frame/dispatch [::events/clear-order])}
+           "Reset Order"])
+        ;; I removed this button. The old mode is barely useful
+        #_(when kitchen-controls?
+            [:button
+             {:style {:all :revert}
+              :on-click #(swap! by-category? not)}
+             "Change Mode"])
         (when kitchen-controls?
           [:button
            {:style {:all :revert}
