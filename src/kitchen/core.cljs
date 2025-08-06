@@ -174,8 +174,11 @@
          [:div
           [prev-stage-button]
           [next-stage-button]
-          ;; (case @(re-frame/subscribe [::subs/kitchen-stage])
-          ;; )
+          (when (= @(re-frame/subscribe [::subs/kitchen-stage]) :offer)
+            [:a {:style {:all :revert
+                         :margin "0.5em"}
+                 :href "/#/pantry"}
+             "Pantry"])
           ])])))
 
 ;; Composites
@@ -271,10 +274,7 @@
                :on-change  (fn [e] (re-frame/dispatch [(if (.-checked (.-target e))
                                                          ::events/require-category-in-order
                                                          ::events/unrequire-category-in-order)
-                                                       category])
-                             ;; (swap! *category-status* assoc-in [category :min] @minimum)
-                             ;; (swap! *category-status* assoc-in [category :max] @maximum)
-                             )
+                                                       category]))
                :style      {:margin-left "0.5em" :border "1px solid black"}}]]
             [:label
              {:style {:color (if required? "black" "gray")}}
@@ -285,12 +285,9 @@
                :max        (count foods-in-category)
                :on-change  (fn [e] (let [num (js/parseInt (.-value (.-target e)))
                                          next-num (if (js/isNaN num) 1 num)]
-                                     ;; (reset! minimum (if (js/isNaN num) 1 num))
-                                     ;; (swap! *category-status* assoc-in [category :min] num)
                                      (re-frame/dispatch [::events/set-category-min category next-num])
                                      (when (>= next-num maximum)
-                                       (re-frame/dispatch [::events/set-category-max category next-num]))
-                                     ))
+                                       (re-frame/dispatch [::events/set-category-max category next-num]))))
                :value      @(re-frame/subscribe [::subs/category-min category])
                :style      {:margin-left "0.5em" :border (str "1px solid " (if required? "black" "gray"))
                             :color (if required? "black" "gray")
@@ -302,9 +299,16 @@
                :max        (count foods-in-category)
                :on-change  (fn [e] (let [num (js/parseInt (.-value (.-target e)))
                                          next-num (if (js/isNaN num) 1 num)]
-                                     ;; (reset! maximum next-num)
-                                     ;; (swap! *category-status* assoc-in [category :max] num)
-                                     (re-frame/dispatch [::events/set-category-max category next-num])))
+                                     ;; TODO can get into invalid states when used improperly
+                                     ;; when user sets maximum below number of already-selected items, it does not
+                                     ;; change the order or reset the category
+                                     (cond
+                                       (> minimum next-num) ; less than minimum
+                                       (re-frame/dispatch [::events/set-category-max category minimum])
+                                       (< (count foods-in-category) next-num) ; more than possible
+                                       (re-frame/dispatch [::events/set-category-max category (count foods-in-category)])
+                                       :else ; valid number
+                                       (re-frame/dispatch [::events/set-category-max category next-num]))))
                :value      @(re-frame/subscribe [::subs/category-max category])
                :style      {:margin-left "0.5em" :border "1px solid black"
                             :border-radius :4px}}]]
