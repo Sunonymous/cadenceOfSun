@@ -121,6 +121,32 @@
        {}
        ])))
 
+(defn data-export-button []
+  (let [foods @(re-frame/subscribe [::subs/foods])]
+    [:button
+     {:style {:all :revert
+              ;; :margin "2em 0.5em"
+              :padding-inline "0.5em"}
+      :on-click #(re-frame/dispatch [::events/export-pantry-foods])}
+     "Export Data"]))
+
+(defn data-import-button []
+  [:div
+   [:input {:id "uploadInput" :style {:display "none"}
+            :type "file" :accept ".edn"
+            :on-change (fn [e] (let [reader (js/FileReader.)
+                                     file   (-> e .-target .-files (aget 0))]
+                                 (set! (.-onload reader)
+                                       (fn [e]
+                                         (let [result (-> e .-target .-result)]
+                                           (re-frame/dispatch [::events/load-foods-from-string result]))))
+                                 (-> reader (.readAsText file))))}]
+   [:button
+    {:style {:all :revert}
+     :on-click #(-> (js/document.getElementById "uploadInput") .click)
+     :aria-label "load user data from file"}
+    "Load Data from File"]])
+
 (defn main []
   (let [foods @(re-frame/subscribe [::subs/foods])]
     [:div
@@ -138,23 +164,33 @@
        {:style {:margin-block "1em"
                 :padding-inline "0.5em"
                 :display :flex
-                :justify-content :space-between}}
+                :justify-content :space-between
+                :align-items :center}}
        [add-new-food-button]
        [:p "Head back to the "
-        [:a {:href "/#/kitchen"
+        [:a {:href "/#/kitchen" ;; TODO fix links which don't have cos prefix!
              :style {:text-decoration :underline
                      :cursor          :pointer}}
          "kitchen"] "?"]]
 
       (if (seq foods)
-        [:ul
-         {:style {:display        :flex
-                  :flex-direction :column
-                  :gap            "0"}}
-         (doall
-          (for [[food-name food] (sort foods)]
-            ^{:key food-name}
-            [food-viewer food]))]
+        [:div
+         [:ul
+          {:style {:display        :flex
+                   :flex-direction :column
+                   :gap            "0"}}
+          (doall
+           (for [[food-name food] (sort foods)]
+             ^{:key food-name}
+             [food-viewer food]))]
+         [:div
+          {:style {:background-color :gray
+                   :display :flex
+                   :justify-content :space-around
+                   :align-items :center
+                   :padding "0.5em 0.25em"}}
+          [data-export-button]
+          [data-import-button]]]
         [:div
          [:p
           {:style {:text-align :center :font-size :1.5em}}

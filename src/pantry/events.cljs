@@ -2,7 +2,8 @@
     (:require
      [re-frame.core :as    re-frame]
      [cos.events    :refer [->localStorage]]
-     [pantry.db     :refer [example-foods]]))
+     [pantry.db     :refer [example-foods]]
+     [cljs.reader   :refer [read-string]]))
 
 (re-frame/reg-event-db
  ::add-example-foods
@@ -63,3 +64,39 @@
  [->localStorage]
  (fn [db [_ food-name new-url]]
    (assoc-in db [:foods food-name :img] new-url)))
+
+;; Data Export
+(re-frame/reg-fx
+ ::export-data
+ (fn [data]
+   (let [data-str (str "data:text/edn;charset=utf-8,"
+                       (js/encodeURIComponent (pr-str data)))
+         anchorElem (js/document.getElementById "downloadDataAnchor")]
+     (set! (.-href anchorElem) data-str)
+     (set! (.-download anchorElem) "pantry_foods.edn")
+     (.click anchorElem)
+     (js/alert "Data has been downloaded to 'pantry_foods.edn'"))))
+
+(re-frame/reg-event-fx
+ ::export-pantry-foods
+ (fn [cofx _]
+   {::export-data (get-in cofx [:db :foods])}))
+
+(re-frame/reg-event-db
+ ::import-pantry-foods
+ [->localStorage]
+ (fn [db [_ edn-data]]
+   (let [data (read-string edn-data)]
+     (assoc db :foods data))))
+
+(re-frame/reg-event-db
+ ::load-foods-from-string
+ (fn [db [_ str-data]]
+   (let [next-foods (read-string str-data)]
+     (if (and next-foods
+              ; (s/valid? ::minddrop.db/pool next-pool) ; TODO need spec!
+              )
+       (assoc db :foods next-foods)
+       (do ;; this branch should never trigger; just held here for eventual improvement
+         (js/alert "Invalid data.")
+         db)))))
