@@ -3,6 +3,7 @@
 ;; In data, be sure that :name matches the key, otherwise problems happen
 ;; To use different names for display, use :nickname
 
+;; TODO add sweet potato ice cream, plantain
 (def foods {"Apples"                      {:name     "Apples"
                                            :img      "https://www.applepietrail.ca/wp-content/uploads/elementor/thumbs/gala-ouju5lhnwyyi470y8nbwd4x3v02o63phzfu0hizxfk.jpg"
                                            :category "fruit"}
