@@ -11,13 +11,13 @@
 
 (def example-foods
   [{:name     "Apple"
-    :category "Fruit"
+    :category "fruit"
     :img      "https://upload.wikimedia.org/wikipedia/commons/a/a6/Pink_lady_and_cross_section.jpg"}
    {:name     "Grapefruit"
-    :category "Mislabeled Fruit (fix it!)"
+    :category "mislabeled fruit (fix it!)"
     :img      "https://upload.wikimedia.org/wikipedia/commons/4/4c/Bananas.jpg"}
    {:name     "Rotten Apple"
-    :category "Trash Fruit (remove it 🗑️!)"
+    :category "trash fruit (remove it 🗑️!)"
     :img      "https://upload.wikimedia.org/wikipedia/commons/c/c6/Madige-Apfel-Frucht.jpg"}])
 
 (def default-db
