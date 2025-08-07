@@ -7,7 +7,7 @@
                 font-size 0.3s ease;
 }
 
-.food-name:hover, .food-name.targeted {
+.food-name:hover {
     cursor: pointer;
     text-decoration: underline;
 }

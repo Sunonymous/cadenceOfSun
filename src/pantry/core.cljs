@@ -78,7 +78,8 @@
       :style {:width         "100%"
               :display        :flex
               :flex-direction :column
-              :padding    "1px 0.5em"
+              :padding-top    "1px"
+              :padding-bottom "1px"
               :border-top "1px solid black"
               :background (if open? "lightgray" "white")}}
      [:span.food-name
