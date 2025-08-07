@@ -1,10 +1,11 @@
 (ns kitchen.core
-  (:require [reagent.core   :as    r]
-            [clojure.string :as    str]
-            [kitchen.subs   :as    subs]
-            [kitchen.events :as    events]
-            [re-frame.core  :as    re-frame]
-            [pantry.subs    :as    pantry-subs]))
+  (:require [reagent.core    :as    r]
+            [clojure.string  :as    str]
+            [kitchen.subs    :as    subs]
+            [kitchen.events  :as    events]
+            [re-frame.core   :as    re-frame]
+            [pantry.subs     :as    pantry-subs]
+            [tools.viewtools :as    vt]))
 
 ;; TODO move data into db and create pantry to edit db content
 
@@ -187,7 +188,8 @@
           [prev-stage-button]
           [next-stage-button]
           (when (= @(re-frame/subscribe [::subs/kitchen-stage]) :offer)
-            [:a {:style {:all :revert
+            [vt/simple-link :routes/#pantry "Pantry"]
+            #_[:a {:style {:all :revert
                          :margin "0.5em"}
                  :href "/#/pantry"}
              "Pantry"])

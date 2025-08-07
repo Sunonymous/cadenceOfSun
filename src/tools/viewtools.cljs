@@ -1,6 +1,9 @@
 (ns tools.viewtools
   (:require [reitit.frontend.easy :as rtfe]))
 
+(defn simple-link [route text]
+  [:a.anchor {:style {:all :revert}
+              :href (rtfe/href route)} text])
 
 (defn item [e]
   (cond

@@ -2,7 +2,8 @@
     (:require [reagent.core :as r]
               [re-frame.core :as re-frame]
               [pantry.subs :as subs]
-              [pantry.events :as events]))
+              [pantry.events :as events]
+              [tools.viewtools :refer [simple-link]]))
 
 (defn name-editor [food-name]
   (let [potential-name (r/atom food-name)]
@@ -168,7 +169,8 @@
                 :align-items :center}}
        [add-new-food-button]
        [:p "Head back to the "
-        [:a {:href "/#/kitchen" ;; TODO fix links which don't have cos prefix!
+        [simple-link :routes/#kitchen "kitchen"]
+        #_[:a {:href "/#/kitchen" ;; TODO verify that these links work on released website
              :style {:text-decoration :underline
                      :cursor          :pointer}}
          "kitchen"] "?"]]
