@@ -188,11 +188,12 @@
           [prev-stage-button]
           [next-stage-button]
           (when (= @(re-frame/subscribe [::subs/kitchen-stage]) :offer)
-            [vt/simple-link :routes/#pantry "Pantry"]
+            [:div {:style {:margin "0.5em" :display :inline-block}}
+             [vt/simple-link :routes/#pantry "Pantry"]]
             #_[:a {:style {:all :revert
-                         :margin "0.5em"}
-                 :href "/#/pantry"}
-             "Pantry"])
+                           :margin "0.5em"}
+                   :href "/#/pantry"}
+               "Pantry"])
           ])])))
 
 ;; Composites
