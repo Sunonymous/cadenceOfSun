@@ -22,6 +22,7 @@
                   :on-change   #(reset! potential-name (-> % .-target .-value))}]])
       )))
 
+;; TODO clone category-editor and convert it to nickname editor
 (defn category-editor [food-name]
   (let [potential-category (r/atom @(re-frame/subscribe [::subs/food-category food-name]))]
     (fn [food-name]
