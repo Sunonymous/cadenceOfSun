@@ -251,9 +251,9 @@
     (fn [offered-foods category]
       (let [minimum       @(re-frame/subscribe [::subs/category-min category])
             maximum       @(re-frame/subscribe [::subs/category-max category])
-            required? (@(re-frame/subscribe [::subs/required-categories]) category)
-            num-in-order @(re-frame/subscribe [::subs/num-of-order-items-of-category category])
-            valid-order? (or (not required?)
+            required?    (@(re-frame/subscribe [::subs/required-categories]) category)
+            num-in-order  @(re-frame/subscribe [::subs/num-of-order-items-of-category category])
+            valid-order?  (or (not required?)
                              (>= maximum num-in-order minimum))]
         [:div
          {:style {:border (str (if required? "3" "2") "px solid " (cond
@@ -296,11 +296,17 @@
               {:type       :number
                :min        1
                :max        (count foods-in-category)
+               :on-focus   #(-> % .-target .select)
                :on-change  (fn [e] (let [num (js/parseInt (.-value (.-target e)))
                                          next-num (if (js/isNaN num) 1 num)]
-                                     (re-frame/dispatch [::events/set-category-min category next-num])
-                                     (when (>= next-num maximum)
-                                       (re-frame/dispatch [::events/set-category-max category next-num]))))
+                                     ;;  (re-frame/dispatch [::events/set-category-min category next-num])
+                                     (cond
+                                       (> 1 next-num)       ; less than 1
+                                       (re-frame/dispatch [::events/set-category-min category 1])
+                                       (> next-num maximum) ; greater than maximum
+                                       (re-frame/dispatch [::events/set-category-min category maximum])
+                                       :otherwise           ; valid number
+                                       (re-frame/dispatch [::events/set-category-min category next-num]))))
                :value      @(re-frame/subscribe [::subs/category-min category])
                :style      {:margin-left "0.5em" :border (str "1px solid " (if required? "black" "gray"))
                             :color (if required? "black" "gray")
@@ -310,6 +316,7 @@
               {:type       :number
                :min        (or @(re-frame/subscribe [::subs/category-min category]) 1)
                :max        (count foods-in-category)
+               :on-focus   #(-> % .-target .select)
                :on-change  (fn [e] (let [num (js/parseInt (.-value (.-target e)))
                                          next-num (if (js/isNaN num) 1 num)]
                                      ;; TODO can get into invalid states when used improperly
@@ -320,7 +327,7 @@
                                        (re-frame/dispatch [::events/set-category-max category minimum])
                                        (< (count foods-in-category) next-num) ; more than possible
                                        (re-frame/dispatch [::events/set-category-max category (count foods-in-category)])
-                                       :else ; valid number
+                                       :otherwise ; valid number
                                        (re-frame/dispatch [::events/set-category-max category next-num]))))
                :value      @(re-frame/subscribe [::subs/category-max category])
                :style      {:margin-left "0.5em" :border "1px solid black"
