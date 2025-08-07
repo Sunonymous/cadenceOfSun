@@ -18,6 +18,11 @@
    (get-in db [:foods food-name :category])))
 
 (re-frame/reg-sub
+ ::food-nickname
+ (fn [db [_ food-name]]
+   (get-in db [:foods food-name :nickname])))
+
+(re-frame/reg-sub
  ::food-img-url
  (fn [db [_ food-name]]
    (get-in db [:foods food-name :img])))

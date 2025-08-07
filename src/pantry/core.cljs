@@ -22,7 +22,6 @@
                   :on-change   #(reset! potential-name (-> % .-target .-value))}]])
       )))
 
-;; TODO clone category-editor and convert it to nickname editor
 (defn category-editor [food-name]
   (let [potential-category (r/atom @(re-frame/subscribe [::subs/food-category food-name]))]
     (fn [food-name]
@@ -35,6 +34,19 @@
                   :on-blur     #(when (not= @potential-category (:category food))
                                   (re-frame/dispatch [::events/update-food-category food-name @potential-category]))
                   :on-change   #(reset! potential-category (-> % .-target .-value))}]]))))
+
+(defn nickname-editor [food-name]
+  (let [potential-nickname (r/atom @(re-frame/subscribe [::subs/food-nickname food-name]))]
+    (fn [food-name]
+      (let [food @(re-frame/subscribe [::subs/food food-name])]
+        [:div.pantry-row
+         [:label.pantry-description "Nickname: "]
+         [:input {:type        :text
+                  :value       (or @potential-nickname (:nickname food))
+                  :placeholder "(shown to diner)"
+                  :on-blur     #(when (not= @potential-nickname (:nickname food))
+                                  (re-frame/dispatch [::events/update-food-nickname food-name @potential-nickname]))
+                  :on-change   #(reset! potential-nickname (-> % .-target .-value))}]]))))
 
 (defn image-editor
   [food-name]
@@ -96,6 +108,7 @@
                  :flex-direction :column
                  :gap            "0.5em"}}
         [name-editor        name]
+        [nickname-editor    name]
         [category-editor    name]
         [image-editor       name]
         [remove-food-button name]])]))

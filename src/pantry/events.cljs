@@ -60,6 +60,12 @@
    (assoc-in db [:foods food-name :category] new-category)))
 
 (re-frame/reg-event-db
+ ::update-food-nickname
+ [->localStorage]
+ (fn [db [_ food-name new-nickname]]
+   (assoc-in db [:foods food-name :nickname] new-nickname)))
+
+(re-frame/reg-event-db
  ::update-food-image
  [->localStorage]
  (fn [db [_ food-name new-url]]
