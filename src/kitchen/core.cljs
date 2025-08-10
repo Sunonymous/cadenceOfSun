@@ -7,8 +7,6 @@
             [pantry.subs     :as    pantry-subs]
             [tools.viewtools :as    vt]))
 
-;; TODO move data into db and create pantry to edit db content
-
 ;; TODO adjust de/select all buttons to only work with filtered items
 
 (defn food-item [item is-included?]
