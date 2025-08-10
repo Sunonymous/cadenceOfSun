@@ -460,7 +460,8 @@
        {:style {:all :revert :font-size "1.5em"}
         :disabled (not valid-order?)
         :on-click #(re-frame/dispatch [::events/next-stage])}
-       "Yes"]
+       "Yes"] ;; TODO create record system, which is a simple, vector of timestamped order submissions
+      ;;              this opens the door to statistics, which people seem to like for some reason
       [:button
        {:style {:all :revert :font-size "1.5em"}
         :on-click #(re-frame/dispatch [::events/previous-stage])}
@@ -534,6 +535,8 @@
   []
   (let [custom-greeting @(re-frame/subscribe [::subs/custom-greeting])
         custom-subtitle @(re-frame/subscribe [::subs/custom-subtitle])]
+    ;; TODO add open kitchen hours and prevent diner from ordering outside of those hours
+    ;;       alternatively, could be on/off switch in control panel
       [:div
        {:style {:margin-block "1em"
                 :text-align   :center}}
