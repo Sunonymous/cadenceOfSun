@@ -96,6 +96,11 @@
      (assoc db :foods data))))
 
 (re-frame/reg-event-db
+ ::clear-pantry
+ (fn [db _]
+   (assoc db :foods {})))
+
+(re-frame/reg-event-db
  ::load-foods-from-string
  (fn [db [_ str-data]]
    (let [next-foods (read-string str-data)]

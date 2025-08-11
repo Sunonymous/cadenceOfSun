@@ -185,10 +185,7 @@
        [add-new-food-button]
        [:p "Head back to the "
         [simple-link :routes/#kitchen "kitchen"]
-        #_[:a {:href "/#/kitchen" ;; TODO verify that these links work on released website
-             :style {:text-decoration :underline
-                     :cursor          :pointer}}
-         "kitchen"] "?"]]
+         "?"]]
 
       (if (seq foods)
         [:div
@@ -207,7 +204,12 @@
                    :align-items :center
                    :padding "0.5em 0.25em"}}
           [data-export-button]
-          [data-import-button]]]
+          [data-import-button]
+          [:button
+           {:style {:all :revert}
+            :on-click #(when (js/confirm "This removes all foods from your pantry. Are you sure? (refresh the page immediately if done on accident)")
+                         (re-frame/dispatch [::events/clear-pantry]))}
+           "Empty Pantry"]]]
         [:div
          [:p
           {:style {:text-align :center :font-size :1.5em}}
