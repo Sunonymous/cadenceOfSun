@@ -101,8 +101,8 @@
           {:style {:display         :flex
                    :justify-content :space-around
                    :align-items     :center}}
-          (when (empty? @cat-filter)
-            [select-all-button])
+          #_(when (empty? @cat-filter)
+            [select-all-button]) ; references hardcoded data
           (when (empty? @cat-filter)
             [deselect-all-button])
           (when (seq presets)
@@ -144,19 +144,27 @@
                (for [category categories]
                  ^{:key category}
                  [:option {:value category} (str/capitalize category)]))]])
-          [next-stage-button "Submit"]]
-         [:h3 {:style {:text-align :center :font-size "2em"}} "Choose Foods to Offer:"]
+            (when (seq filtered-items)
+              [next-stage-button "Submit"])]
          ;; TODO create display when there are no foods and encourage visiting pantry
-         [:ul
-          (doall
-           (for [food filtered-items] ; checks for inclusion in already-selected foods
-             ^{:key food}
-             [food-item food (selected-foods (:name food))]))]
-         [:div
-          {:style {:margin-block :1em
-                   :display :flex
-                   :justify-content :space-around}}
-          [next-stage-button "Submit"]]]))))
+         (if (seq filtered-items)
+           [:div
+            [:h3 {:style {:text-align :center :font-size "2em"}} "Choose Foods to Offer:"]
+            [:ul
+             (doall
+              (for [food filtered-items] ; checks for inclusion in already-selected foods
+                ^{:key food}
+                [food-item food (selected-foods (:name food))]))]
+            [:div
+             {:style {:margin-block :1em
+                      :display :flex
+                      :justify-content :space-around}}
+             [next-stage-button "Submit"]]]
+           [:div ;; no foods in pantry
+            {:style {:margin-block :2em}}
+            [:h3 {:style {:text-align :center :font-size "2em"}} "I'd like to open the kitchen, but..."]
+            [:h4 {:style {:text-align :center :font-size "1.75em"}} "My " [vt/simple-link :routes/#pantry "pantry"] " is empty. 😮‍💨"]
+            ])]))))
 
 (defn control-panel []
   (let [press-timeout-id (r/atom nil)

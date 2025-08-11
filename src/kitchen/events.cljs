@@ -26,7 +26,7 @@
 
 (re-frame/reg-event-db
  ::offer-all-foods
- (fn [db _]
+ (fn [db _] ;; TODO this still references hard-coded data!
    (assoc db :food-selection (set (keys foods)))))
 
 (re-frame/reg-event-db
