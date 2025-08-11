@@ -144,7 +144,7 @@
               ;; :margin "2em 0.5em"
               :padding-inline "0.5em"}
       :on-click #(re-frame/dispatch [::events/export-pantry-foods])}
-     "Export Data"]))
+     "Save Data to File"]))
 
 (defn data-import-button []
   [:div
