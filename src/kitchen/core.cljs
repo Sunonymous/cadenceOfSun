@@ -125,7 +125,7 @@
                              (reset! active-preset nil))
                  :style {:all :revert :margin-left "0.5em"}
                  :disabled (not @active-preset)}
-                "X"])])
+                "🗑️"])])
           [:button
            {:disabled (empty? selected-foods)
             :on-click (fn [_]
