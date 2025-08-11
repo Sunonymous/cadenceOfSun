@@ -98,7 +98,10 @@
 (re-frame/reg-event-db
  ::clear-pantry
  (fn [db _]
-   (assoc db :foods {})))
+   (-> db
+       (assoc :foods {})
+       (assoc :food-selection #{})
+       (assoc :meal-order #{}))))
 
 (re-frame/reg-event-db
  ::load-foods-from-string
