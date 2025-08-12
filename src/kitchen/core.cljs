@@ -166,6 +166,8 @@
             [:h4 {:style {:text-align :center :font-size "1.75em"}} "My " [vt/simple-link :routes/#pantry "pantry"] " is empty. 😮‍💨"]
             ])]))))
 
+;; TODO add stages display
+
 (defn control-panel []
   (let [press-timeout-id (r/atom nil)
         start-timer!     (fn [_]
@@ -550,6 +552,8 @@
                 :text-align   :center}}
        (when @(re-frame/subscribe [::subs/show-kitchen-controls?])
          [:div
+          ;; TODO better edit triggers
+          ;; I'm thinking pencil buttons after each string (visible in parent mode)
           [:label "Custom Greeting: "]
           [:input
            {:style {:border "1px solid black" :border-radius "0.5em" :padding "0.5em"}
@@ -562,6 +566,7 @@
            {:style {:border "1px solid black" :border-radius "0.5em" :padding "0.5em"}
             :value custom-subtitle
             :on-change #(re-frame/dispatch [::events/set-custom-subtitle (-> % .-target .-value)])}]])
+       ;; TODO add custom emojis too (why not?)
        [:h1 {:style {:text-align :center :font-size :2.5em}}
         (if (seq (.trim custom-greeting))
           custom-greeting
