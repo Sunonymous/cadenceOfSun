@@ -14,9 +14,15 @@
     [keer.views             :as keer]
     [kitchen.core           :as kitchen]
     [pantry.core            :as pantry]
+    [cos.events             :as events]
+    [tools.util             :refer [one-of]]
     [tools.reframetools     :refer [sdb gdb]]))
 
 ;;https://clojure.org/guides/weird_characters#__code_code_var_quote
+
+; !!!
+;; Remember to add page-title below when adding a new route.
+
 (def routes
     (rtf/router
       ["/"
@@ -44,9 +50,28 @@
 
       {:data {:coercion rsc/coercion}}))
 
+;; TODO add variations to page titles, subtle or not
+;;; use one-of function and pass a collection of strings
+(def route->page-title
+  {:routes/#frontpage "Nice to meet you!"
+   :routes/#now       "A Brief Timeline of the Eternal Moment"
+   :routes/#about     "A Few Words"
+   :routes/#tools     "Personal and Peculiar Tools"
+   :routes/#works     "Works"
+   :routes/#music     "My Sonic Manglings"
+   :routes/#connect   "Let's chat!"
+   :routes/#keer      "Practice Practice Practice!"
+   :routes/#kitchen   "Kitchen"
+   :routes/#pantry    "Pantry"
+  })
+
 (defn on-navigate [new-match]
   (when new-match
-    (rf/dispatch [:routes/navigated new-match])))
+    (let [route (-> new-match :data :name)
+          page-title (route->page-title route)]
+      (when page-title
+        (rf/dispatch [::events/set-page-title (str page-title " · Cadence of Sun ·")]))
+      (rf/dispatch [:routes/navigated new-match]))))
 
 (defn app-routes []
   (rtfe/start! routes

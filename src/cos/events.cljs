@@ -22,15 +22,25 @@
 
 (def ->localStorage (re-frame/after db->local-storage))
 
+(re-frame/reg-fx
+ :set-page-title
+ (fn [next-title]
+   (set! (.-title js/document) next-title)))
+
+(re-frame/reg-event-fx
+ ::set-page-title ; references the map in cos.routes
+ (fn [_ [_ title]]
+   {:set-page-title title}))
+
 (re-frame/reg-event-fx
  ::initialize-db
  [(re-frame/inject-cofx :localStorage localStorage-key)]
  (fn [cofx _]
    (let [persisted-db (read-string (:localStorage cofx))]
      ;; TODO would be better to use a spec...
-     (assoc cofx :db (if persisted-db
-                        (merge db/default-db persisted-db)
-                        (merge keer-db/default-db    ;; Add DB for Keer Tool
-                               pantry.db/default-db  ;; Add DB for Pantry Tool
-                               kitchen-db/default-db ;; Add DB for Kitchen Tool
-                               db/default-db))))))   ;; Home DB
+     { :db (if persisted-db
+             (merge db/default-db persisted-db)
+             (merge keer-db/default-db    ;; Add DB for Keer Tool
+                    pantry.db/default-db  ;; Add DB for Pantry Tool
+                    kitchen-db/default-db ;; Add DB for Kitchen Tool
+                    db/default-db))})))   ;; Home DB
