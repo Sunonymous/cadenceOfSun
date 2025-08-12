@@ -16,3 +16,5 @@
       (.writeText text)
       (.then #(js/console.log "Copied to clipboard!"))
       (.catch #(js/console.error "Failed to copy to clipboard:" %))))
+
+(defn one-of [coll] (first (shuffle coll)))
