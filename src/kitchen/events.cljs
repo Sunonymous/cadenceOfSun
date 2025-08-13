@@ -50,6 +50,11 @@
   (some (fn [[i x]] (when (= x item) i)) (map-indexed vector v)))
 
 (re-frame/reg-event-db
+ ::set-kitchen-stage
+ (fn [db [_ stage]]
+   (assoc db :kitchen-stage stage)))
+
+(re-frame/reg-event-db
  ::next-stage
  [->localStorage]
  (fn [db _]
@@ -118,3 +123,9 @@
  [->localStorage]
  (fn [db [_ category  max]]
    (assoc-in db [:category-stats category :max] max)))
+
+(re-frame/reg-event-db
+ ::reset-kitchen
+ (fn [_ _]
+   (re-frame/dispatch [::remove-all-offered-foods])
+   (re-frame/dispatch [::clear-order])))

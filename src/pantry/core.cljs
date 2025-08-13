@@ -170,8 +170,6 @@
               :flex-direction :column
               :align-items    :flex-start
               :max-width      :800px
-              :border-left    "4px solid black"
-              :padding-left   :1em
               :margin         "0 auto"}}
      [:h1 {:style {:font-size :3rem}} "Pantry"]
      [:div

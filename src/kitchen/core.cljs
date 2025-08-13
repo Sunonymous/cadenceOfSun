@@ -61,7 +61,7 @@
    {:on-click #(re-frame/dispatch [::events/remove-all-offered-foods])
     :disabled (empty? @(re-frame/subscribe [::subs/selected-foods]))
     :style {:all :revert}}
-   "Deselect All"])
+   "Reset"])
 
 (defn prev-stage-button
   []
@@ -70,14 +70,14 @@
     :style {:all         :revert
              :padding     "0.5em 0.5em"
              :font-weight 600}}
-   "Prev Step ⬅️"])
+   "⬅️"])
 
 ;; previous stage is an admin function
 ;; but this button can be reused throughout nearly every stage
 ;; so I provided another arity that can have custom text
 (defn next-stage-button
   ([]
-   [next-stage-button "➡️ Next Step"])
+   [next-stage-button "➡️"])
   ([text]
    [:button
     {:on-click #(re-frame/dispatch [::events/next-stage])
@@ -166,7 +166,47 @@
             [:h4 {:style {:text-align :center :font-size "1.75em"}} "My " [vt/simple-link :routes/#pantry "pantry"] " is empty. 😮‍💨"]
             ])]))))
 
-;; TODO add stages display
+(defn stage-display []
+  (let [stages events/stages
+        current-stage @(re-frame/subscribe [::subs/kitchen-stage])]
+    [:div
+     [:div
+      {:style {:display :flex
+               :justify-content :space-between
+               :align-items :baseline
+               :gap "0.5em"
+               :margin-block :1em}}
+      [:h3 {:style {:font-size "1.5em"
+                    :margin-right :auto}}
+       "Steps"]
+      [prev-stage-button]
+      [next-stage-button]]
+     [:div
+      {:style {;:margin :1.5em
+               :padding "0 1em 0.5em 1em"
+               :display :flex
+               :justify-content :center
+               :gap "0.5em"
+               :border-bottom "2px solid black"}}
+      (for [stage stages]
+        ^{:key stage}
+        [:button
+         {:class (when (= stage current-stage) "active")
+          :style {:all :revert
+                  :cursor :pointer
+                  :outline-offset :2px
+                  :border-radius "0.5em"
+                  :color (if (= stage current-stage)
+                           "#000" "#999"
+                  )
+                  :border (if (= stage current-stage)
+                            "2px solid black" "2px solid transparent"
+                  )
+                  ;; :outline (if (= stage current-stage)
+                  ;;            "1px solid black" "none")
+                  }
+          :on-click #(re-frame/dispatch [::events/set-kitchen-stage stage])}
+         (name stage)])]]))
 
 (defn control-panel []
   (let [press-timeout-id (r/atom nil)
@@ -180,7 +220,7 @@
                 :display :flex
                 :justify-content :center
                 :align-items :center}}
-       [:span
+       [:span.no-select
         {:style {:font-size   "2rem"
                  :position    :relative
                  :line-height :1.5rem
@@ -191,18 +231,32 @@
          :on-mouse-up    clear-timeout!
          :on-mouse-down  start-timer!}
         "🧂"]
-       (when @(re-frame/subscribe [::subs/show-kitchen-controls?])
-         [:div
-          [prev-stage-button]
-          [next-stage-button]
-          (when (= @(re-frame/subscribe [::subs/kitchen-stage]) :offer)
-            [:div {:style {:margin "0.5em" :display :inline-block}}
-             [vt/simple-link :routes/#pantry "Pantry"]]
-            #_[:a {:style {:all :revert
-                           :margin "0.5em"}
-                   :href "/#/pantry"}
-               "Pantry"])
-          ])])))
+       [:div.control-panel
+        {:class (when @(re-frame/subscribe [::subs/show-kitchen-controls?]) "open")}
+        [stage-display]
+        [:div
+         {:style {:display :flex
+                  :justify-content :center
+                  :gap "1em"
+                  :font-size "1.15em"
+                  }}
+         [:button ; close panel button
+          {:style {:all :revert :font-size :inherit}
+           :on-click #(re-frame/dispatch [::events/toggle-kitchen-controls])}
+          "Close ⓧ"]
+         [:button ; ready for child button
+          {:style {:all :revert :font-size :inherit}
+           :on-click #(do
+                        (re-frame/dispatch [::events/toggle-kitchen-controls])
+                        (re-frame/dispatch [::events/set-kitchen-stage :greet]))}
+          "Ready ✓"]
+         [:button ; reset kitchen button
+          {:style {:all :revert :font-size :inherit}
+           :on-click #(when (js/confirm "Are you sure you want to reset the kitchen? This clears the order and offered foods.")
+                        (re-frame/dispatch [::events/reset-kitchen]))}
+          "Reset ↺"]]
+        [vt/simple-link :routes/#pantry "Go to Pantry"]
+        ]])))
 
 ;; Composites
 
@@ -588,6 +642,10 @@
             :margin-block     "1em"
             :margin-inline    :auto
             :padding          "1em"
+            :padding-bottom (if @(re-frame/subscribe [::subs/show-kitchen-controls?])
+                              "300px" "1em") ; this is to ensure all the page is visible when
+                                             ;; the control panel is open
+            :transition       "padding 0.2s ease-in-out"
             :border           "1px solid black"
             :border-radius    "1em"
             :background-color "white"}}
