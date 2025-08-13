@@ -164,3 +164,12 @@ button:hover, button:focus {
   max-height: 500px; /* adjust if needed */
   transition: max-height 0.3s ease, padding 0.3s ease;
 }
+
+.no-select {
+    user-select: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-touch-callout: none;
+}
