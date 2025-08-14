@@ -644,9 +644,14 @@
             :margin-block     "1em"
             :margin-inline    :auto
             :padding          "1em"
-            :padding-bottom (if @(re-frame/subscribe [::subs/show-kitchen-controls?])
+            :padding-bottom (if (and @(re-frame/subscribe [::subs/show-kitchen-controls?])
+                                     ; kind of weird logic, but this is basically only useful on
+                                     ;   these particular stages, because they bottom portion
+                                     ;   is cut off from view/access
+                                     (or (= :order @(re-frame/subscribe [::subs/kitchen-stage]))
+                                         (= :offer @(re-frame/subscribe [::subs/kitchen-stage]))))
                               "300px" "1em") ; this is to ensure all the page is visible when
-                                             ;; the control panel is open
+            ;; the control panel is open
             :transition       "padding 0.2s ease-in-out"
             :border           "1px solid black"
             :border-radius    "1em"
