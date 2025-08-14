@@ -246,6 +246,7 @@
           "Close ⓧ"]
          [:button ; ready for child button
           {:style {:all :revert :font-size :inherit}
+           :disabled (not (seq @(re-frame/subscribe [::subs/selected-foods])))
            :on-click #(do
                         (re-frame/dispatch [::events/toggle-kitchen-controls])
                         (re-frame/dispatch [::events/set-kitchen-stage :greet]))}
