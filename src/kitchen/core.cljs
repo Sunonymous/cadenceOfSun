@@ -429,14 +429,7 @@
             [:button
              {:style {:all :revert}
               :on-click #(swap! by-category? not)}
-             "Change Mode"])
-        (when kitchen-controls?
-          [:button
-           {:style {:all :revert}
-            :on-click (fn [_]
-                        (re-frame/dispatch [::events/previous-stage])
-                        (re-frame/dispatch [::events/toggle-kitchen-controls]))}
-           "Ready for Diner"])]
+             "Change Mode"])]
        (if @by-category?
          [:div
           [:h2
