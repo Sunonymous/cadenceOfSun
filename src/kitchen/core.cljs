@@ -334,7 +334,7 @@
           [:h3 {:style {:font-size "1.5em"}}
            (if (or (nil? category)
                    (= "" category))
-             "etc." category) ":"] ;; TODO make this a configuration value?
+             "other" category) ":"] ;; TODO make this a configuration value?
           (when required?
             [:p
              (cond
