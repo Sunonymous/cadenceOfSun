@@ -52,22 +52,23 @@
 
 ;; TODO add variations to page titles, subtle or not
 ;;; use one-of function and pass a collection of strings
-(def route->page-title
-  {:routes/#frontpage "Nice to meet you!"
-   :routes/#now       "A Brief Timeline of the Eternal Moment"
-   :routes/#about     "A Few Words"
-   :routes/#tools     "Personal and Peculiar Tools"
-   :routes/#works     "Works"
-   :routes/#music     "My Sonic Manglings"
-   :routes/#connect   "Let's chat!"
-   :routes/#keer      "Practice Practice Practice!"
-   :routes/#kitchen   "Kitchen"
-   :routes/#pantry    "Pantry"
-  })
+(defn route->page-title [route]
+  (get {:routes/#frontpage (one-of ["Nice to meet you!" "Good day!" "Hello there!"])
+        :routes/#now       (str "A " (one-of ["Brief Timeline" "Tiny Snapshot" "Miniscule Filter"]) " of the Eternal Moment")
+        :routes/#about     "A Few Words"
+        :routes/#tools     "Personal and Peculiar Tools"
+        :routes/#works     "Works"
+        :routes/#music     "My Sonic Manglings"
+        :routes/#connect   "Let's chat!"
+        :routes/#keer      "Practice Practice Practice!"
+        :routes/#kitchen   "Kitchen"
+        :routes/#pantry    "Pantry"}
+       route
+       "<?>"))
 
 (defn on-navigate [new-match]
   (when new-match
-    (let [route (-> new-match :data :name)
+    (let [route      (-> new-match :data :name)
           page-title (route->page-title route)]
       (when page-title
         (rf/dispatch [::events/set-page-title (str page-title " · Cadence of Sun ·")]))
