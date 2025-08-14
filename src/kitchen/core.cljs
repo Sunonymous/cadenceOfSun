@@ -146,7 +146,6 @@
                  [:option {:value category} (str/capitalize category)]))]])
             (when (seq filtered-items)
               [next-stage-button "Submit"])]
-         ;; TODO create display when there are no foods and encourage visiting pantry
          (if (seq filtered-items)
            [:div
             [:h3 {:style {:text-align :center :font-size "2em"}} "Choose Foods to Offer:"]
