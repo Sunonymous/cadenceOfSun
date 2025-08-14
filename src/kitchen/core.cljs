@@ -332,7 +332,9 @@
           {:style {:display :flex :justify-content :flex-start :align-items :baseline :gap "0.5em"
                    }}
           [:h3 {:style {:font-size "1.5em"}}
-           category ":"]
+           (if (or (nil? category)
+                   (= "" category))
+             "etc." category) ":"] ;; TODO make this a configuration value?
           (when required?
             [:p
              (cond
