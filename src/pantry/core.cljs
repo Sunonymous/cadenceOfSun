@@ -45,7 +45,9 @@
                   :value       (or @potential-nickname (:nickname food))
                   :placeholder "(shown to diner)"
                   :on-blur     #(when (not= @potential-nickname (:nickname food))
-                                  (re-frame/dispatch [::events/update-food-nickname food-name @potential-nickname]))
+                                  (re-frame/dispatch [::events/update-food-nickname food-name (if (empty? (.trim @potential-nickname))
+                                                                                                nil ; prevents erased/empty nicknames from being saved
+                                                                                                @potential-nickname)]))
                   :on-change   #(reset! potential-nickname (-> % .-target .-value))}]]))))
 
 (defn image-editor
