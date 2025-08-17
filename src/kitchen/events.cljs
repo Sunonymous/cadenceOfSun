@@ -70,7 +70,7 @@
 
 (re-frame/reg-event-db
  [->localStorage]
- ::deactivate-kitchen-controls
+ ::disable-kitchen-controls
  (fn [db _]
    (assoc db :kitchen-controls? false)))
 
