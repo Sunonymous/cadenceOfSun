@@ -16,6 +16,9 @@
          [:div.accordion-content
           content])])))
 
+;; TODO needs much better display for tools
+;; TODO add kitchen+pantry and board
+
 (def tools
   {:keer   {:name        "Keer"
             :description "help practice a musical motion in all twelve keys."
