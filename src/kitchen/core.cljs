@@ -440,7 +440,7 @@
              [:p
               {:style {:text-align :center :font-size "2em"}}
               "Choose the food you want to eat:"]
-             (doall
+             (doall ;; TODO make categories case insensitive?
               (for [category (sort @(re-frame/subscribe [::subs/offered-categories]))]
                 ^{:key category}
                 [:div
