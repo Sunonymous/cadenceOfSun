@@ -4,12 +4,12 @@
 ))
 
 (re-frame/reg-event-db
- ::add-new-string
+ ::add-line
  [->localStorage]
  (fn [db [_ text]]
    (update db :lines conj text)))
 
 (re-frame/reg-event-db
- ::delete-string
+ ::delete-line
  (fn [db [_ text]]
    (update db :lines (fn [lines] (filter #(not= text %) lines)))))
