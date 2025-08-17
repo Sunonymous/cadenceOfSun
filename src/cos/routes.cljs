@@ -65,7 +65,8 @@
         :routes/#connect   "Let's chat!"
         :routes/#keer      "Practice Practice Practice!"
         :routes/#kitchen   "Kitchen"
-        :routes/#pantry    "Pantry"}
+        :routes/#pantry    "Pantry"
+        :routes/#board     "A Virtual Working Memory"}
        route
        "<?>"))
 
