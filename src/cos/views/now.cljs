@@ -18,7 +18,8 @@
 
    [month-of-activity "August" 2025
     [:<>
-     [:li "Released " [simple-link :routes/#kitchen "Kitchen+Pantry"]  " combination."]]]
+     [:li "Released " [simple-link :routes/#kitchen "Kitchen+Pantry"]  " combination."]
+     [:li "Scaffolding a virtual working memory " [simple-link :routes/#board "board"]  "."]]]
    [month-of-activity "July" 2025
     [:<>
      [:li "Revisiting " [:a {:href "https://callflo.app/"} "CallFlo"]]
