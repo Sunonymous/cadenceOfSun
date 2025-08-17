@@ -16,3 +16,8 @@
 ; [ ] Delete an existing string
 ; [ ] Change a string (which is like creating a string with a shortcut)
 
+(defn main
+  []
+  [:div#boardWrapper
+   "This is the board."
+  ])
