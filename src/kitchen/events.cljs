@@ -69,8 +69,8 @@
      (assoc db :kitchen-stage (nth stages (dec-wrap-index stages current-index))))))
 
 (re-frame/reg-event-db
- [->localStorage]
  ::disable-kitchen-controls
+ [->localStorage]
  (fn [db _]
    (assoc db :kitchen-controls? false)))
 
