@@ -241,7 +241,7 @@
                   }}
          [:button ; close panel button
           {:style {:all :revert :font-size :inherit}
-           :on-click #(re-frame/dispatch [::events/toggle-kitchen-controls])}
+           :on-click #(re-frame/dispatch [::events/disable-kitchen-controls])}
           "Close ⓧ"]
          [:button ; ready for child button
           {:style {:all :revert :font-size :inherit}
