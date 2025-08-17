@@ -14,6 +14,7 @@
     [keer.views             :as keer]
     [kitchen.core           :as kitchen]
     [pantry.core            :as pantry]
+    [board.core             :as board]
     [cos.events             :as events]
     [tools.util             :refer [one-of]]
     [tools.reframetools     :refer [sdb gdb]]))
@@ -41,11 +42,13 @@
        ["connect"
         {:name :routes/#connect   :view #'connect/main}]
        ["keer"
-        {:name :routes/#keer     :view #'keer/main}]
+        {:name :routes/#keer      :view #'keer/main}]
        ["kitchen"
-        {:name :routes/#kitchen     :view #'kitchen/main}]
+        {:name :routes/#kitchen   :view #'kitchen/main}]
        ["pantry"
-        {:name :routes/#pantry     :view #'pantry/main}]
+        {:name :routes/#pantry    :view #'pantry/main}]
+       ["board"
+        {:name :routes/#board     :view #'board/main}]
       ]
 
       {:data {:coercion rsc/coercion}}))
