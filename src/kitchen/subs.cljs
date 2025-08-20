@@ -67,3 +67,17 @@
  ::category-max
  (fn [db [_ category]]
    (or (get-in db [:category-stats category :max]) 1)))
+
+(re-frame/reg-sub
+ ::max-total-foods
+ (fn [db]
+   (:max-total-foods db)))
+
+(re-frame/reg-sub
+ ::order-less-than-max-total-foods?
+ :<- [::meal-order]
+ :<- [::max-total-foods]
+ (fn [[meal-order max-total-foods] _]
+   (if (nil? max-total-foods)
+     true
+     (< (count meal-order) max-total-foods))))

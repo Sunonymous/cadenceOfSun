@@ -404,7 +404,9 @@
           (doall
            (for [food foods-in-category]
              ^{:key food}
-             [detailed-food-item (:name food) (< num-in-order maximum)]
+             [detailed-food-item (:name food) (and ; less items than max-total and category max
+                                               @(re-frame/subscribe [::subs/order-less-than-max-total-foods?])
+                                               (< num-in-order maximum))]
              ))]
          ]))))
 
@@ -412,7 +414,8 @@
   []
   (let [offered-foods     @(re-frame/subscribe [::subs/selected-foods])
         kitchen-controls? @(re-frame/subscribe [::subs/show-kitchen-controls?])
-        by-category?       (r/atom true)]
+        by-category?       (r/atom true)
+        proposed-max-total (r/atom @(re-frame/subscribe [::subs/max-total-foods]))]
     (fn []
       [:div
        [:div
@@ -432,6 +435,25 @@
              "Change Mode"])]
        (if @by-category?
          [:div
+          [:div
+           {:style {:margin-block  :1em
+                    :margin-inline :auto
+                    :padding       :1em
+                    :width         :fit-content
+                    :border        "2px solid black"}}
+           [:label
+            "Max # of Foods Altogether: "
+            [:input
+             {:type        :number
+              :max         (count offered-foods)
+              :placeholder "No Max"
+              :on-change   (fn [e] (let [num (js/parseInt (.-value (.-target e)))]
+                                     (reset! proposed-max-total (if (js/isNaN num) nil num))))
+              :on-blur     #(re-frame/dispatch [::events/set-max-total-foods @proposed-max-total])
+              :value       @proposed-max-total
+              :style       {:width       :10ch
+                            :margin-left :0.5em
+                            :border      "1px solid black"}}]]]
           [:h2
            {:style {:text-align :center :font-size "2.5em" :font-weight 700}}
            "Order Selection"]

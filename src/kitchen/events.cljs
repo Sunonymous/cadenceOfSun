@@ -135,3 +135,9 @@
  (fn [_ _]
    (re-frame/dispatch [::remove-all-offered-foods])
    (re-frame/dispatch [::clear-order])))
+
+(re-frame/reg-event-db
+ ::set-max-total-foods
+ [->localStorage]
+ (fn [db [_ max-total-foods]]
+   (assoc db :max-total-foods max-total-foods)))
