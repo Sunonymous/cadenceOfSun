@@ -410,6 +410,30 @@
              ))]
          ]))))
 
+(defn max-total-foods-input
+  [proposed-max-total] ; pass this a ratom to manipulate and deref
+  (when @(re-frame/subscribe [::subs/show-kitchen-controls?])
+    [:div
+     {:style {:margin-block  :1em
+              :margin-inline :auto
+              :padding       :1em
+              :width         :fit-content
+              :border        "2px solid black"}}
+     [:label
+      "Max # of Foods Altogether: "
+      [:input
+       {:type        :number
+        :min         1
+        :max         (count @(re-frame/subscribe [::subs/selected-foods]))
+        :placeholder "No Max"
+        :on-change   (fn [e] (let [num (js/parseInt (.-value (.-target e)))]
+                               (reset! proposed-max-total (if (js/isNaN num) nil num))))
+        :on-blur     #(re-frame/dispatch [::events/set-max-total-foods @proposed-max-total])
+        :value       @proposed-max-total
+        :style       {:width       :10ch
+                      :margin-left :0.5em
+                      :border      "1px solid black"}}]]]))
+
 (defn order-selection-menu-2
   []
   (let [offered-foods     @(re-frame/subscribe [::subs/selected-foods])
@@ -435,25 +459,8 @@
              "Change Mode"])]
        (if @by-category?
          [:div
-          [:div
-           {:style {:margin-block  :1em
-                    :margin-inline :auto
-                    :padding       :1em
-                    :width         :fit-content
-                    :border        "2px solid black"}}
-           [:label
-            "Max # of Foods Altogether: "
-            [:input
-             {:type        :number
-              :max         (count offered-foods)
-              :placeholder "No Max"
-              :on-change   (fn [e] (let [num (js/parseInt (.-value (.-target e)))]
-                                     (reset! proposed-max-total (if (js/isNaN num) nil num))))
-              :on-blur     #(re-frame/dispatch [::events/set-max-total-foods @proposed-max-total])
-              :value       @proposed-max-total
-              :style       {:width       :10ch
-                            :margin-left :0.5em
-                            :border      "1px solid black"}}]]]
+          [max-total-foods-input proposed-max-total]
+
           [:h2
            {:style {:text-align :center :font-size "2.5em" :font-weight 700}}
            "Order Selection"]
