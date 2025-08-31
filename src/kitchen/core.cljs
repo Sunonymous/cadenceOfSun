@@ -487,7 +487,10 @@
                                          (let [min @(re-frame/subscribe [::subs/category-min category])
                                                max @(re-frame/subscribe [::subs/category-max category])]
                                            (and min max (<= min @(re-frame/subscribe [::subs/num-of-order-items-of-category category])))))
-                                       @(re-frame/subscribe [::subs/required-categories])))
+                                       @(re-frame/subscribe [::subs/required-categories]) ;; TODO BUG! this requires ALL required categories, even if
+                                                                                          ;; they are not in the offered foods. marking a category required
+                                                                                          ;; once requires it on every order!
+                                       ))
                 :on-click #(re-frame/dispatch [::events/next-stage])}
                "Continue"]]]
             [:div
