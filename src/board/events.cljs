@@ -13,5 +13,6 @@
 ;; TODO board delete line adds to recovery drawer
 (re-frame/reg-event-db
  ::delete-line
+ [->localStorage]
  (fn [db [_ text]]
    (update db :lines (fn [lines] (filter #(not= text %) lines)))))
