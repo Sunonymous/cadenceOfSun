@@ -132,9 +132,11 @@
 
 (re-frame/reg-event-db
  ::reset-kitchen
- (fn [_ _]
+ (fn [db _]
    (re-frame/dispatch [::remove-all-offered-foods])
-   (re-frame/dispatch [::clear-order])))
+   (re-frame/dispatch [::clear-order])
+   (when (not= :offer (:kitchen-stage db))
+     (re-frame/dispatch [::set-kitchen-stage :offer]))))
 
 (re-frame/reg-event-db
  ::set-max-total-foods
