@@ -560,7 +560,8 @@
 
 (defn preparation-stage
   []
-  (let [meal-order @(re-frame/subscribe [::subs/meal-order])]
+  (let [meal-order @(re-frame/subscribe [::subs/meal-order]) ;; the official name is in the order
+        named-foods (map (fn [s] @(re-frame/subscribe [::subs/food-name s])) meal-order)] ; so we get their nicknames if available
     [:div
      {:style {:margin-block "4em"}}
      [:p.status-text
@@ -576,14 +577,13 @@
                        "Cooking in progress..."
                        "Kitchen is closed.")]
      [:p {:style {:text-align :center :font-size "0.75em"}}
-      (case (count meal-order)
+      (case (count named-foods)
         0 "Gone to lunch."
-        1 (str "Preparing your " (first meal-order) ".")
-        2 (str "Preparing your " (first meal-order) " and " (second meal-order) ".")
+        1 (str "Preparing your " (first named-foods) ".")
+        2 (str "Preparing your " (first named-foods) " and " (second named-foods) ".")
         (apply concat "Preparing your "
-               (interpose ", " (take (dec (count meal-order)) meal-order))
-               ", and " (last meal-order) ".")
-      )]]))
+               (interpose ", " (take (dec (count named-foods)) named-foods))
+               ", and " (last named-foods) "."))]]))
 
 (defn ready-stage
   []

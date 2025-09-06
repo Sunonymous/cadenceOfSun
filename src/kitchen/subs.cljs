@@ -81,3 +81,9 @@
    (if (nil? max-total-foods)
      true
      (< (count meal-order) max-total-foods))))
+
+(re-frame/reg-sub
+ ::food-name ; show nickname for display or fallback to food name
+ (fn [db [_ food-name]]
+   (let [nickname (get-in db [:foods food-name :nickname])]
+     (or nickname food-name))))
