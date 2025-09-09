@@ -28,6 +28,14 @@
                    (re-frame/dispatch [::events/add-line new-line])))}
    "➕"])
 
+(defn board-reset-warning
+  []
+  (let [today    (js/Date. @(re-frame/subscribe [::subs/last-used]))
+        tomorrow (js/Date. (.getFullYear today) (.getMonth today) (inc (.getDate today)))]
+    [:span#resetWarning
+     {}
+     "board resets on " (.toLocaleDateString tomorrow)]))
+
 (defn main
   []
   [:div#boardWrapper
@@ -36,19 +44,20 @@
             :display         :flex
             :flex-direction  :column
             :justify-content :center}}
+   [board-reset-warning]
    [:div#linesWrapper
     {:style {:display         :flex
              :flex-direction  :column
              :justify-content :center
              :gap             :16px
-            }}
+             }}
     [front-add-button]
     (doall
      (for [line @(re-frame/subscribe [::subs/lines])]
        ^{:key line} ; not necessarily unique, but that's up to the user
        [:article#line
         {:style {:padding         "1rem 0.5rem"
-                ;;  :border          "1px solid magenta"
+                 ;;  :border          "1px solid magenta"
                  :display         :flex
                  :justify-content :space-between
                  :align-items     :center}}
@@ -61,7 +70,7 @@
                   :font-size :2rem}
           :on-click #(re-frame/dispatch [::events/delete-line line])}
          "➡️"]]))
-   ]])
+    ]])
 
 (comment
 

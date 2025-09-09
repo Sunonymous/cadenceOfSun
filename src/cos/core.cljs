@@ -1,15 +1,15 @@
 (ns ^:figwheel-hooks cos.core
-   (:require [cos.events               :as events]
-             [cos.config               :as config]
-             [cos.routes               :as routes]
-             [cos.styles               :as styl]
-             [cos.views.home           :as views]
-             [goog.dom                 :as gdom]
-             [react                    :as react]
-             [re-frame.core            :as re-frame]
-             [reagent.dom.client       :as rdc]))
-
-
+  (:require
+   [reagent.dom.client       :as rdc]
+   [cos.events               :as events]
+   [cos.styles               :as styl]
+   [goog.dom                 :as gdom]
+   [cos.views.home           :as views]
+   [react                    :as react]
+   [cos.config               :as config]
+   [cos.routes               :as routes]
+   [re-frame.core            :as re-frame]
+   [board.events             :as board.events]))
 
 (defn dev-setup []
   (when config/debug?
@@ -31,6 +31,7 @@
   (println "init again..")
   (re-frame/dispatch-sync [::events/initialize-db])
   (dev-setup)
+  (re-frame/dispatch [::board.events/check-day]) ; reset board if a new day
   (routes/app-routes)
 
   (mount-root))
