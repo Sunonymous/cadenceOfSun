@@ -67,7 +67,7 @@
           [:button
            {:style {:all :revert}
             :on-click #(js/window.open
-                        (str "http://www.google.com/images?q=" food-name) "_blank")}
+                        (str "https://search.brave.com/images?q=" food-name) "_blank")}
            "🔎"]]
          [:div {:style {:padding "1em"
                         :gap "1em"}}
