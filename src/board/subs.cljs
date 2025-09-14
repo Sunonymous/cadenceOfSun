@@ -10,3 +10,16 @@
 (re-frame/reg-sub
  ::last-used
  (fn [db] (:last-used db)))
+
+(re-frame/reg-sub
+ ::sections
+ (fn [db] (:sections db)))
+
+(re-frame/reg-sub
+ ::active-section
+ (fn [db] (:active-section db)))
+
+(re-frame/reg-sub
+ ::lines-in-section
+ (fn [db [_ section-title]]
+   (get-in db [:sections section-title])))

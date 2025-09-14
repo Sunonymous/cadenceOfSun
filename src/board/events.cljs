@@ -1,7 +1,6 @@
 (ns board.events (:require
-  [re-frame.core :as re-frame]
-  [cos.events    :refer [->localStorage]]
-))
+                  [re-frame.core :as re-frame]
+                  [cos.events    :refer [->localStorage]]))
 
 ;; IMPORTANT NOTE
 ; there is a function (::events/check-day) that needs to be placed in core that runs every app startup.
@@ -39,10 +38,46 @@
           (day-of-year (js/Date. second-timestamp)))))
 
 (re-frame/reg-event-db
+ ::add-section
+ [->localStorage]
+ (fn [db [_ title]]
+   (assoc-in db [:sections title] [])))
+
+(re-frame/reg-event-db
+ ::delete-section
+ [->localStorage]
+ (fn [db [_ section-title]]
+   (update db :sections dissoc section-title)))
+
+(re-frame/reg-event-db
+ ::add-line-to-section
+ [->localStorage]
+ (fn [db [_ section-title text]]
+   (update-in db [:sections section-title] conj text)))
+
+(re-frame/reg-event-db
+ ::delete-line-from-section
+ [->localStorage]
+ (fn [db [_ section-title text]]
+   (update-in db [:sections section-title] (fn [lines] (filter #(not= text %) lines)))))
+
+(re-frame/reg-event-db
+ ::activate-section
+ [->localStorage]
+ (fn [db [_ section-title]]
+   (assoc db :active-section section-title)))
+
+(re-frame/reg-event-db
+ ::deactivate-section
+ [->localStorage]
+ (fn [db _]
+   (assoc db :active-section nil)))
+
+(re-frame/reg-event-db
  ::reset-board
  [->localStorage]
  (fn [db _]
-   (assoc db :lines [])))
+   (assoc db :lines [] :sections {} :active-section nil)))
 
 (re-frame/reg-event-db
  ::check-day
