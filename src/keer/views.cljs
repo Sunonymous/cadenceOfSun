@@ -82,8 +82,6 @@
               :else "")]
      [:span (nth interval-names (abs semitone-adjustment))]]))
 
-;; TODO extract these repeated css styles into class
-
 (defn toggle-sharps-button []
   (let [sharps? @(re-frame/subscribe [::subs/use-sharps?])]
     [:button {:on-click #(re-frame/dispatch [::events/toggle-sharps])

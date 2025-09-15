@@ -13,10 +13,6 @@
 ; In the future, it could be useful to allow inner strings.
 ; What can we do with these strings?
 
-; [x] Add a new string
-; [ ] Delete an existing string
-; [ ] Change a string (which is like creating a string with a shortcut)
-
 (defn add-line-button
   [section-title]
   [:button
