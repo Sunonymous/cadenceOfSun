@@ -23,3 +23,7 @@
  ::lines-in-section
  (fn [db [_ section-title]]
    (get-in db [:sections section-title])))
+
+(re-frame/reg-sub
+ ::focused-line
+ (fn [db] (:focused-line db)))

@@ -12,7 +12,6 @@
  (fn [db [_ text]]
    (update db :lines conj text)))
 
-
 ;; TODO board delete line adds to recovery drawer
 (re-frame/reg-event-db
  ::delete-line
@@ -73,11 +72,16 @@
  (fn [db _]
    (assoc db :active-section nil)))
 
+;; this board reset should only occur automatically on day reset, not manually!
 (re-frame/reg-event-db
  ::reset-board
  [->localStorage]
  (fn [db _]
-   (assoc db :lines [] :sections {} :active-section nil)))
+   (assoc db :lines          (db :tomorrow) ; tomorrow became today
+             :tomorrow       []  ; and yesterday is forgotten
+             :sections       {}
+             :focused-line   nil
+             :active-section nil)))
 
 (re-frame/reg-event-db
  ::check-day
@@ -86,3 +90,19 @@
    (when (is-different-day? (:last-used db) (js/Date.now))
      (re-frame/dispatch [::reset-board]))
    (assoc db :last-used (js/Date.now))))
+
+(re-frame/reg-event-db
+ ::move-to-tomorrow
+ [->localStorage]
+ (fn [db [_ line-or-section]]
+   (-> db
+       (update :tomorrow conj line-or-section)
+       (update :lines #(filter (partial not= line-or-section) %))))
+)
+
+(re-frame/reg-event-db
+ ::toggle-line-focus
+ (fn [db [_ line-or-section]]
+   (if (= line-or-section (:focused-line db))
+     (assoc db :focused-line nil)
+     (assoc db :focused-line line-or-section))))

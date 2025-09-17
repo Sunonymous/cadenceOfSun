@@ -36,6 +36,15 @@
                    (re-frame/dispatch [::events/add-section title])))}
    "[ + ]"])
 
+(defn move-to-tomorrow-button
+  []
+  [:button
+   {:style {:all       :revert
+            :font-size :1.5rem
+            :margin-left :8px}
+    :on-click #(re-frame/dispatch [::events/move-to-tomorrow @(re-frame/subscribe [::subs/focused-line])])}
+   "🔜"])
+
 (defn back-button
   []
   [:button
@@ -55,23 +64,29 @@
 
 (defn line-component
   [line section-title]
-  [:article
-   {:style {:padding         "0.5rem"
-            :display         :flex
-            :justify-content :space-between
-            :align-items     :center
-            :margin-left     (if section-title "1rem" "0")}}
-   [:span
-    {:style {:font-family "Playfair Display"
-             :font-size   :1.2rem}}
-    line]
-   [:button
-    {:style {:all       :revert
-             :font-size :1.5rem}
-     :on-click #(if section-title
-                  (re-frame/dispatch [::events/delete-line-from-section section-title line])
-                  (re-frame/dispatch [::events/delete-line line]))}
-    "×"]])
+  (let [is-focused? (= line @(re-frame/subscribe [::subs/focused-line]))]
+    [:article
+     {:class (if is-focused? "animated-gradient" "") ; animation is in pantry_styles.css
+      :on-click #(re-frame/dispatch [::events/toggle-line-focus line])
+      :style {:padding         "0.5rem"
+              :display         :flex
+              :justify-content :space-between
+              :align-items     :center
+              :margin-left     (if section-title "1rem" "0")
+              :font-style      (if is-focused? "oblique 22deg" "normal")
+              :user-select     :none
+             }}
+     [:span
+      {:style {:font-family "Playfair Display"
+               :font-size   :1.2rem}}
+      line]
+     [:button
+      {:style {:all       :revert
+               :font-size :1.5rem}
+       :on-click #(if section-title
+                    (re-frame/dispatch [::events/delete-line-from-section section-title line])
+                    (re-frame/dispatch [::events/delete-line line]))}
+      "×"]]))
 
 (defn section-header
   [section-title]
@@ -144,7 +159,9 @@
                   :gap     :8px
                   :margin  "1rem 0"}}
          [add-line-button nil]
-         [add-section-button]]
+         [add-section-button]
+         (when @(re-frame/subscribe [::subs/focused-line])
+           [move-to-tomorrow-button])]
         [:div#contentWrapper
          {:style {:display         :flex
                   :flex-direction  :column
