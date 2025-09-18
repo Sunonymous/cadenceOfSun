@@ -17,8 +17,7 @@
  ::delete-line
  [->localStorage]
  (fn [db [_ text]]
-   (when (= text (:focused-line db))
-     (re-frame/dispatch [::clear-focused-line]))
+   (re-frame/dispatch [::clear-focused-line])
    (update db :lines (fn [lines] (filter #(not= text %) lines)))))
 
 (defn day-of-year [^js/Date d]
