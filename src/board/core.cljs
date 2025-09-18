@@ -63,7 +63,7 @@
      "board resets on " (.toLocaleDateString tomorrow)]))
 
 (defn line-component
-  [line section-title]
+  [line section-title] ;; TODO there is a bug with this where deleting a different line removes the selection styling
   (let [is-focused? (= line @(re-frame/subscribe [::subs/focused-line]))]
     [:article
      {:class (if is-focused? "animated-gradient" "") ; animation is in pantry_styles.css
@@ -161,7 +161,9 @@
          [add-line-button nil]
          [add-section-button]
          (when @(re-frame/subscribe [::subs/focused-line])
-           [move-to-tomorrow-button])]
+           [move-to-tomorrow-button])
+        ;;  [:pre {} @(re-frame/subscribe [::subs/app-db])] ;; TODO debug, remove eventually -- careful when using as sequences are read as functions by reader
+        ]
         [:div#contentWrapper
          {:style {:display         :flex
                   :flex-direction  :column

@@ -10,13 +10,15 @@
  ::add-line
  [->localStorage]
  (fn [db [_ text]]
-   (update db :lines conj text)))
+   (update db :lines #(into [] (conj % text)))))
 
 ;; TODO board delete line adds to recovery drawer
 (re-frame/reg-event-db
  ::delete-line
  [->localStorage]
  (fn [db [_ text]]
+   (when (= text (:focused-line db))
+     (re-frame/dispatch [::clear-focused-line]))
    (update db :lines (fn [lines] (filter #(not= text %) lines)))))
 
 (defn day-of-year [^js/Date d]
@@ -77,11 +79,13 @@
  ::reset-board
  [->localStorage]
  (fn [db _]
-   (assoc db :lines          (db :tomorrow) ; tomorrow became today
-             :tomorrow       []  ; and yesterday is forgotten
-             :sections       {}
-             :focused-line   nil
-             :active-section nil)))
+   (let [tomorrow (db :tomorrow)]
+     (assoc db
+            :lines          tomorrow ; tomorrow became today
+            :tomorrow       []  ; and yesterday is forgotten
+            :sections       {}
+            :focused-line   nil
+            :active-section nil))))
 
 (re-frame/reg-event-db
  ::check-day
@@ -96,9 +100,15 @@
  [->localStorage]
  (fn [db [_ line-or-section]]
    (-> db
-       (update :tomorrow conj line-or-section)
-       (update :lines #(filter (partial not= line-or-section) %))))
+       (update :tomorrow #(into [] (conj % line-or-section)))
+       (update :lines #(into [] (filter (partial not= line-or-section) %)))))
 )
+
+(re-frame/reg-event-db
+ ::clear-focused-line
+ [->localStorage]
+ (fn [db _]
+   (assoc db :focused-line nil)))
 
 (re-frame/reg-event-db
  ::toggle-line-focus

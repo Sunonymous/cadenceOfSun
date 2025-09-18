@@ -27,3 +27,7 @@
 (re-frame/reg-sub
  ::focused-line
  (fn [db] (:focused-line db)))
+
+(re-frame/reg-sub
+ ::app-db ;; TODO debug, remove eventually
+ (fn [db] db))
