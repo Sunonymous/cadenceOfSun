@@ -3,6 +3,10 @@
                 [board.events  :as events]
                 [re-frame.core :as re-frame]))
 
+;; Things to consider for later:
+;; Line "health", ie. can only move lines to tomorrow for a certain number of times before it is disallowed.
+;; Cycled lines, ie. lines that reappear daily.
+
 ;; Let's codify the basics of a virtual working memory.
 ; Its objects are simple strings of text.
 ;   IDs? Metadata? Extraneous!
