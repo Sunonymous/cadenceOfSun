@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    .pulse-button {
+      position: relative;
+      overflow: hidden;
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #6200ea;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.5);
+      transform: scale(0);
+      animation: pulse 0.6s ease-out;
+      pointer-events: none;
+    }
+
+    @keyframes pulse {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<button class="pulse-button" onclick="createPulse(event)">Click Me</button>
+
+<script>
+  function createPulse(e) {
+    const button = e.currentTarget;
+
+    const ripple = document.createElement('span');
+    ripple.classList.add('ripple');
+
+    const rect = button.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    ripple.style.width = ripple.style.height = `${size}px`;
+
+    // Position ripple at click location relative to button
+    const x = e.clientX - rect.left - size / 2;
+    const y = e.clientY - rect.top - size / 2;
+    ripple.style.left = `${x}px`;
+    ripple.style.top = `${y}px`;
+
+    button.appendChild(ripple);
+
+    // Remove ripple after animation
+    ripple.addEventListener('animationend', () => {
+      ripple.remove();
+    });
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,85 @@
+.food-name {
+    padding-inline: 0.5em;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 1.5em;
+    font-weight: 400;
+    transition: font-weight 0.3s ease,
+                font-size 0.3s ease;
+}
+
+.food-name:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.food-name.targeted {
+    font-size: 1.75em;
+    font-weight: 500;
+}
+.food-name.targeted:hover {
+    font-weight: 600;
+    background-color: darkgray;
+}
+
+.pantry-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 1em;
+}
+
+.pantry-row > .pantry-description {
+    min-width: 10ch;
+}
+
+
+.food-thumbnail.pantry {
+    margin-inline: auto;
+    animation: fadeIn 1.5s ease-in-out;
+}
+
+/* fade in keyframes animation */
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.animated-gradient {
+  position: relative;
+  z-index: 0;
+  border-radius: 10px;
+  padding: 14px;
+  background: white; /* content background */
+}
+
+.animated-gradient::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  padding: 2px; /* thickness of border area */
+  background: linear-gradient(90deg,
+    rgba(255,0,150,0.95),
+    rgba(255,150,0,0.95),
+    rgba(0,200,255,0.95),
+    rgba(120,0,255,0.95));
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  animation: gradient-slide 11s linear infinite;
+  background-size: 400% 100%;
+}
+
+@keyframes gradient-slide {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
