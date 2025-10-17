@@ -99,8 +99,9 @@
  [->localStorage]
  (fn [db [_ line-or-section]]
    (-> db
-       (update :tomorrow #(into [] (conj % line-or-section)))
-       (update :lines #(into [] (filter (partial not= line-or-section) %)))))
+       (update :tomorrow     #(into [] (conj % line-or-section)))
+       (update :lines        #(into [] (filter (partial not= line-or-section) %)))
+       (assoc  :focused-line nil)))
 )
 
 (re-frame/reg-event-db
