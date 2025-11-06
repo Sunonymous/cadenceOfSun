@@ -46,7 +46,9 @@
 
 (defn main-panel []
   (let [active-route (re-frame/subscribe [:routes/current-route])]
-    [:div
-     [vt/navigation toolbar-items]
+    [:div ; the when-not below is a hacky version to remove the navbar from the kitchen/pantry pages
+     (when-not (or (= (-> @active-route :template) "/kitchen")
+                   (= (-> @active-route :template) "/pantry"))
+       [vt/navigation toolbar-items])
      [show-panel @active-route]
     ]))
