@@ -638,15 +638,17 @@
           [:label "Custom Greeting: "]
           [:input
            {:style {:border "1px solid black" :border-radius "0.5em" :padding "0.5em"}
-            :value custom-greeting
-            :on-change #(re-frame/dispatch [::events/set-custom-greeting (-> % .-target .-value)])}]
+            :value       custom-greeting
+            :placeholder "(use default)"
+            :on-change   #(re-frame/dispatch [::events/set-custom-greeting (-> % .-target .-value)])}]
           [:br]
           [:br]
           [:label "Custom Subtitle: "]
           [:input
            {:style {:border "1px solid black" :border-radius "0.5em" :padding "0.5em"}
-            :value custom-subtitle
-            :on-change #(re-frame/dispatch [::events/set-custom-subtitle (-> % .-target .-value)])}]])
+            :value       custom-subtitle
+            :placeholder "(use default)"
+            :on-change   #(re-frame/dispatch [::events/set-custom-subtitle (-> % .-target .-value)])}]])
        ;; TODO add custom emojis too (why not?)
        [:h1 {:style {:text-align :center :font-size :2.5em}}
         (if (seq (.trim custom-greeting))
