@@ -668,7 +668,8 @@
 (defn main []
   [:div
    {:style {:max-width        :800px
-            :margin-block     "1em"
+            :margin-top       "4em"
+            :margin-bottom    "1em"
             :margin-inline    :auto
             :padding          "1em"
             :padding-bottom (if (and @(re-frame/subscribe [::subs/show-kitchen-controls?])
