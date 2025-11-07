@@ -1,0 +1,89 @@
+/* Animation from ChatGPT */
+
+.cooking-animation {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #f4a261;
+  animation: bubble 1.2s infinite ease-in-out;
+}
+
+.dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes bubble {
+  0%, 80%, 100% {
+    transform: scale(0.9);
+    opacity: 0.6;
+  }
+  40% {
+    transform: scale(1.3);
+    opacity: 1;
+  }
+}
+
+.status-text {
+  text-align: center;
+  font-size: 1.25rem;
+  color: #264653;
+  margin-top: 1rem;
+}
+
+.food-thumbnail {
+  /* width: 100%; */
+  height: auto;
+  max-height: 60px;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.food-thumbnail.bigger {
+  max-height: 100px;
+}
+.food-thumbnail.bigger:hover {
+  transform: scale(1.3);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.food-thumbnail:hover {
+  transform: scale(1.03);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.control-panel {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 1rem;
+  overflow: hidden;
+  background: white;
+  box-shadow: 0 -4px 12px rgba(0,0,0,0.15);
+  transform: translateY(100%);
+  transition: transform 0.4s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  z-index: 10;
+}
+
+.control-panel.open {
+  transform: translateY(0%);
+}
